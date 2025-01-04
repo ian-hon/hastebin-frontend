@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './App.module.css';
 import newIcon from './assets/plus.svg';
 import helpIcon from './assets/help.svg';
+import eyeIcon from './assets/eye.svg';
 import { useNavigate, useParams } from "react-router-dom";
 import Guide from './Guide';
 import { BACKEND_ADDRESS, fromHex, toHex } from './constants';
@@ -35,6 +36,7 @@ export default function View() {
 
             changeFetched(true);
             changeAuthor(r['signature']);
+            changeViews(r['views']);
 
             changeTabs(r['content']);
 
@@ -52,6 +54,7 @@ export default function View() {
     const [parsed, changeParsed] = useState('');
 
     const [author, changeAuthor] = useState('');
+    const [views, changeViews] = useState(0);
 
     const [tabs, changeTabs] = useState(new Array());
     const [activeTab, changeActiveTab] = useState(tabs[0]);
@@ -98,6 +101,12 @@ export default function View() {
                     <h5 id={styles.signature} aria-label={author.length == 0 ? 'none' : ''}>
                         {author.length == 0 ? 'no author provided' : `author : ${author}`}
                     </h5>
+                    <div id={styles.views}>
+                        <img src={eyeIcon} />
+                        <h5>
+                            {views}
+                        </h5>
+                    </div>
                 </div>
             </div>
             <div id={styles.container}>

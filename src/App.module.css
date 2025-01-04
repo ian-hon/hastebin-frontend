@@ -122,6 +122,10 @@
     }
 
     & #details {
+        display:flex;
+        justify-content: center;
+        align-items: center;
+
         & label, input, h5 {
             font-size:1rem;
         }
@@ -141,6 +145,30 @@
 
             &::placeholder {
                 font-style:italic;
+            }
+        }
+
+        & #views {
+            display:flex;
+            justify-content: center;
+            align-items:center;
+
+            margin-left:2ch;
+
+            opacity: 0.5;
+
+            /* background:red; */
+
+            & img {
+                height:1.2em;
+                width:1.2em;
+
+                margin-right:0.5ch;
+            }
+
+            & h5 {
+                margin:0;
+                padding:0;
             }
         }
     }
