@@ -33,24 +33,14 @@ export default function View() {
                 return;
             }
 
-            console.log(r);
-
             changeFetched(true);
-
-            // changeParsed(highlight.highlightAuto(r['content'][0][1].toString()).value);
-            // console.log(highlight.highlightAuto(r['content'][0][1].toString()).value);
-
             changeParsed(r['content'][0][1].toString());
-
-            // const nodes = document.querySelectorAll('pre code');
-            // nodes.forEach(node => highlight.highlightBlock(node));
             changeAuthor(r['signature']);
         })
     })
 
     const [fetched, changeFetched] = useState(false);
 
-    // const [content, changeContent] = useState('fetching code...');
     const [parsed, changeParsed] = useState('');
 
     const [author, changeAuthor] = useState('');
@@ -83,7 +73,7 @@ export default function View() {
                 <hr/>
                 <div id={styles.details}>
                     <h5 id={styles.signature} aria-label={author.length == 0 ? 'none' : ''}>
-                        {author.length == 0 ? 'no author provided' : author}
+                        {author.length == 0 ? 'no author provided' : `author : ${author}`}
                     </h5>
                 </div>
             </div>
