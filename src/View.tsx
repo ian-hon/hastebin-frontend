@@ -1,33 +1,23 @@
 import { useEffect, useState } from 'react';
 import styles from './App.module.css';
-import saveIcon from './assets/save.svg';
 import newIcon from './assets/plus.svg';
-import filesIcon from './assets/files.svg';
 import helpIcon from './assets/help.svg';
-import 'highlight.js/styles/github.css';
 import { useNavigate, useParams } from "react-router-dom";
 import Guide from './Guide';
 import { BACKEND_ADDRESS, fromHex, toHex } from './contants';
 
-function keyPressed(k: any) {
-    if (k.key == 'Tab') {
-        k.preventDefault();
-        console.log('tab pressed');
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { tomorrowNightBlue } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
-        let start = k.target.selectionStart;
-        let end = k.target.selectionEnd;
-
-        k.target.value = k.target.value.substring(0, start) + '\t' + k.target.value.substring(end);
-        k.target.selectionStart = k.target.selectionEnd = start + 1;
-    }
-}
+// import 'highlight.js/styles/tokyo-night-dark.css';
+// import highlight from 'highlight.js';
 
 export default function View() {
     let navigate = useNavigate();
     let params = useParams();
 
     useEffect(() => {
-        if ((params.id == undefined) || (params.id == 'help') || (content.length != 0)) {
+        if ((params.id == undefined) || (params.id == 'help') || (fetched)) {
             return;
         }
 
@@ -45,13 +35,23 @@ export default function View() {
 
             console.log(r);
 
-            changeContent(r['content']);
+            changeFetched(true);
+
+            // changeParsed(highlight.highlightAuto(r['content'][0][1].toString()).value);
+            // console.log(highlight.highlightAuto(r['content'][0][1].toString()).value);
+
+            changeParsed(r['content'][0][1].toString());
+
+            // const nodes = document.querySelectorAll('pre code');
+            // nodes.forEach(node => highlight.highlightBlock(node));
             changeAuthor(r['signature']);
         })
     })
 
-    const [content, changeContent] = useState('');
-    // const [parsed, changeParsed] = useState('');
+    const [fetched, changeFetched] = useState(false);
+
+    // const [content, changeContent] = useState('fetching code...');
+    const [parsed, changeParsed] = useState('');
 
     const [author, changeAuthor] = useState('');
 
@@ -62,25 +62,8 @@ export default function View() {
     return (
         <div id={styles.page}>
             <div id={styles.navbar}>
-                {/* tabs with curved edges
-                <div id={styles.tabContainer}>
-                    {
-                        tabs.map(
-                            (m, i) =>
-                            <div className={styles.tab} key={i} aria-label={activeTab - i == 1 ? 'before' : (activeTab - i == -1 ? 'after' : activeTab == i ? 'current' : '')}>
-                                <div id={styles.content}>
-                                    <h3>
-                                        {m[0]}
-                                    </h3>
-                                    <img src={cross}/>
-                                </div>
-                            </div>
-                        )
-                    }
-                </div> */}
                 <div id={styles.actions}>
                     <div className={styles.action} onClick={() => {
-                        changeContent('');
                         navigate('/');
                     }}>
                         <img src={newIcon} />
@@ -106,11 +89,12 @@ export default function View() {
             </div>
             <div id={styles.container}>
                 <div id={styles.content}>
-                    <textarea readOnly={true} onKeyDown={keyPressed} spellCheck={false} onChange={(e) => {
-                        changeContent(e.target.value);
-                        // changeParsed(highlight.highlightAuto(content).value);
-                    }} value={content} />
-                    {/* <div dangerouslySetInnerHTML={{ __html: parsed }}/> */}
+                    <SyntaxHighlighter id={styles.parsed} style={tomorrowNightBlue} aria-label={fetched ? '' : 'loading'} customStyle={{
+                        fontSize:'1.33rem',
+                        fontFamily:'Source Code Pro'
+                    }}>
+                        { fetched ? parsed : 'fetching code...' }
+                    </SyntaxHighlighter>
                 </div>
             </div>
         </div>

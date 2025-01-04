@@ -14,74 +14,6 @@
     background:var(--background);
 }
 
-/* tabs with curved edges */
-/* #navbar {
-    display:flex;
-    justify-content: flex-start;
-
-    & #tabContainer {
-        display:flex;
-        justify-content: flex-start;
-        align-items: center;
-
-        background:purple;
-
-        overflow:hidden;
-
-        & .tab {
-            background:grey;
-
-            border-top-left-radius: var(--border-radius);
-            border-top-right-radius: var(--border-radius);
-
-            overflow:hidden;
-
-            &[aria-label='before'] #content {
-                border-bottom-right-radius: var(--border-radius);
-            }
-    
-            &[aria-label='after'] #content {
-                border-bottom-left-radius: var(--border-radius);
-            }
-
-            &[aria-label='current'] #content {
-                filter:brightness(1.0);
-            }
-
-            & #content {
-                display:flex;
-                justify-content: center;
-                align-items:center;
-
-                background:grey;
-    
-                height:var(--navbar-height);
-                padding:0 2ch;
-
-                filter:brightness(0.7);
-    
-                & h3 {
-                    margin:0;
-                    padding:0;
-        
-                    color:white;
-        
-                    font-family: 'Noto Sans';
-                    font-weight:400;
-                }
-        
-                & img {
-                    margin-left:1ch;
-                    padding:0.2em;
-        
-                    height:0.8em;
-                    width:0.8em;
-                }
-            }
-        }
-    }
-} */
-
 #navbar {
     position:absolute;
     right:0;
@@ -192,24 +124,6 @@
             font-size:1rem;
         }
 
-        /* & label {
-            margin-right:1ch;
-        }
-
-        & #language {
-            & #languageSelect {
-
-                width:fit-content;
-    
-                color:var(--text);
-                background:var(--secondary);
-    
-                & hr {
-                    width:100%;
-                }
-            }
-        } */
-
         & #language {
             display:none;
         }
@@ -306,6 +220,21 @@
             resize: none;
 
             font-family:'Source Code Pro';
+        }
+    }
+
+    & #parsed {
+        font-family: 'Source Code Pro';
+
+        background:none !important;
+
+        &[aria-label='loading'] {
+            opacity: 0.5;
+            font-style:italic;
+
+            & code, & span {
+                color:var(--text) !important;
+            }
         }
     }
 }

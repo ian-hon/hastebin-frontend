@@ -1,13 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styles from './App.module.css';
 import saveIcon from './assets/save.svg';
 import newIcon from './assets/plus.svg';
 import filesIcon from './assets/files.svg';
 import helpIcon from './assets/help.svg';
-import 'highlight.js/styles/github.css';
-import { useNavigate, useParams } from "react-router-dom";
-import Guide from './Guide';
-import { BACKEND_ADDRESS, fromHex, toHex } from './contants';
+import { useNavigate } from "react-router-dom";
 
 function keyPressed(k: any) {
     if (k.key == 'Tab') {
@@ -26,7 +23,6 @@ export default function App() {
     let navigate = useNavigate();
 
     const [content, changeContent] = useState('');
-    // const [parsed, changeParsed] = useState('');
 
     const [isCreate, changeIsCreate] = useState(true);
     const [isMultiFile, changeIsMultiFile] = useState(false);
@@ -34,22 +30,6 @@ export default function App() {
     return (
         <div id={styles.page}>
             <div id={styles.navbar}>
-                {/* tabs with curved edges
-                <div id={styles.tabContainer}>
-                    {
-                        tabs.map(
-                            (m, i) =>
-                            <div className={styles.tab} key={i} aria-label={activeTab - i == 1 ? 'before' : (activeTab - i == -1 ? 'after' : activeTab == i ? 'current' : '')}>
-                                <div id={styles.content}>
-                                    <h3>
-                                        {m[0]}
-                                    </h3>
-                                    <img src={cross}/>
-                                </div>
-                            </div>
-                        )
-                    }
-                </div> */}
                 <div id={styles.actions}>
                     <div className={styles.action} aria-label={ isCreate ? '' : 'disabled' } onClick={() => {
                         if (!isCreate) {
