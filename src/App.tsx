@@ -6,6 +6,7 @@ import filesIcon from './assets/files.svg';
 import helpIcon from './assets/help.svg';
 import deleteIcon from './assets/trash.svg';
 import { useNavigate } from "react-router-dom";
+import { BACKEND_ADDRESS, toHex } from './contants';
 
 function keyPressed(k: any) {
     if (k.key == 'Tab') {
@@ -47,6 +48,12 @@ export default function App() {
 
     function changeMode(multiFile: boolean) {
         changeIsMultiFile(multiFile);
+
+        // delete all except the current active file
+        let t = new Array(activeTab);
+        changeTabs(t);
+        changeActiveTab(t[0]);
+        changeActiveTabIndex(0);
     }
 
     function deleteTab(n: number) {
@@ -78,12 +85,47 @@ export default function App() {
         changeTabs(t => [...t]);
     }
 
+    function constructData(): Array<Array<string>> {
+        let t = tabs;
+        if (isMultiFile) {
+            t[activeTabIndex][1] = content;
+        } else {
+            // maybe redundant check but just in case
+            t[0][1] = content;
+        }
+
+        return t;
+    }
+
+    function save() {
+        console.log(`body : ${JSON.stringify({
+            signature:author,
+            content:constructData()  
+        })}`);
+
+        fetch(`${BACKEND_ADDRESS}/create`, {
+            method:'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                signature:author,
+                content:constructData()  
+            })
+        })
+        .then((r) => r.json())
+        .then((r) => {
+            // console.log(toHex(r));
+            navigate(`/${toHex(r)}`)
+        })
+    }
+
     return (
         <div id={styles.page}>
             <div id={styles.navbar}>
                 <div id={styles.actions}>
                     <div className={styles.action} onClick={() => {
-                        console.log('save');
+                        save();
                     }}>
                         <img src={saveIcon} />
                         <h5>
@@ -92,11 +134,11 @@ export default function App() {
                     </div>
                     <div className={styles.action} onClick={() => {
                         changeContent('');
+                        changeAuthor('');
                         navigate('/');
                         changeIsMultiFile(false);
 
                         let t = new Array(new Array('main', ''));
-
                         changeTabs(t);
                         changeActiveTab(t[0]);
                         changeActiveTabIndex(0);
@@ -106,7 +148,7 @@ export default function App() {
                             new
                         </h5>
                     </div>
-                    <div className={styles.action} aria-label={isMultiFile ? 'active' : ''} onClick={() => { changeIsMultiFile(f => !f); }}>
+                    <div className={styles.action} aria-label={isMultiFile ? 'active' : ''} onClick={() => { changeMode(!isMultiFile); }}>
                         <img src={filesIcon} />
                         <h5>
                             multiple files

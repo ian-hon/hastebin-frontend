@@ -7,10 +7,10 @@ import Guide from './Guide';
 import { BACKEND_ADDRESS, fromHex, toHex } from './contants';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { tomorrowNightBlue } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { atomOneDark as highlightTheme } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 // import 'highlight.js/styles/tokyo-night-dark.css';
-// import highlight from 'highlight.js';
+import highlight from 'highlight.js';
 
 export default function View() {
     let navigate = useNavigate();
@@ -34,8 +34,16 @@ export default function View() {
             }
 
             changeFetched(true);
-            changeParsed(r['content'][0][1].toString());
             changeAuthor(r['signature']);
+
+            changeTabs(r['content']);
+
+            changeParsed(r['content'][0][1]);
+            changeActiveTabIndex(0);
+            changeActiveTab(r['content'][0]);
+
+            let lang = highlight.highlightAuto(r['content'][0][1]).language;
+            changeLanguage(lang == undefined ? '' : lang);
         })
     })
 
@@ -44,6 +52,21 @@ export default function View() {
     const [parsed, changeParsed] = useState('');
 
     const [author, changeAuthor] = useState('');
+
+    const [tabs, changeTabs] = useState(new Array());
+    const [activeTab, changeActiveTab] = useState(tabs[0]);
+    const [activeTabIndex, changeActiveTabIndex] = useState(0);
+
+    const [language, changeLanguage] = useState('');
+
+    function switchTab(n: number) {
+        let lang = highlight.highlightAuto(tabs[n][1]).language;
+        changeLanguage(lang == undefined ? '' : lang);
+
+        changeParsed(tabs[n][1]);
+        changeActiveTabIndex(n);
+        changeActiveTab(tabs[n]);
+    }
 
     if (params.id == 'help') {
         return <Guide/>
@@ -78,10 +101,18 @@ export default function View() {
                 </div>
             </div>
             <div id={styles.container}>
-                <div id={styles.content}>
-                    <SyntaxHighlighter id={styles.parsed} style={tomorrowNightBlue} aria-label={fetched ? '' : 'loading'} customStyle={{
+                <div id={styles.explorer} aria-label={tabs.length > 1 ? '' : 'single'}>
+                    {
+                        tabs.map((e, i) => <div className={styles.tab} key={i} aria-label={activeTab == e ? 'active' : ''} onClick={() => { switchTab(i); }}>
+                            <h5>{e[0]}</h5>
+                        </div>)
+                    }
+                </div>
+                <div id={styles.parsedContainer}>
+                    <SyntaxHighlighter language={language} id={styles.parsed} style={highlightTheme} aria-label={fetched ? '' : 'loading'} customStyle={{
                         fontSize:'1.33rem',
-                        fontFamily:'Source Code Pro'
+                        fontFamily:'Source Code Pro',
+                        overflow:'scroll'
                     }}>
                         { fetched ? parsed : 'fetching code...' }
                     </SyntaxHighlighter>

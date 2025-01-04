@@ -207,15 +207,23 @@
     & #content {
         height:calc(100% - 2em - 2em);
         width:calc(100% - 4ch);
+        /* width:max-content; */
+        /* width:100%; */
+
+        padding:0;
+        margin:1em 2ch;
 
         z-index: 10;
 
-        margin:1em 2ch;
-        padding:0;
+        /* background:blue; */
 
         & textarea {
             height:100%;
-            width:100%;
+            min-width:100%;
+
+            /* background:red; */
+
+            white-space: nowrap;
 
             outline: none;
 
@@ -225,17 +233,26 @@
         }
     }
 
-    & #parsed {
-        font-family: 'Source Code Pro';
+    & #parsedContainer {
+        height:100%;
+        width:100%;
 
-        background:none !important;
+        overflow:scroll;
 
-        &[aria-label='loading'] {
-            opacity: 0.5;
-            font-style:italic;
-
-            & code, & span {
-                color:var(--text) !important;
+        & #parsed {
+            font-family: 'Source Code Pro';
+    
+            background:none !important;
+    
+            overflow:scroll !important;
+    
+            &[aria-label='loading'] {
+                opacity: 0.5;
+                font-style:italic;
+    
+                & code, & span {
+                    color:var(--text) !important;
+                }
             }
         }
     }
@@ -284,9 +301,12 @@
                 background:var(--background);
             }
 
-            & input {
+            & input, & h5 {
                 margin:0;
                 padding:0;
+
+                overflow:hidden;
+                text-overflow: ellipsis;
 
                 height:fit-content;
 
@@ -314,7 +334,7 @@
 
             height:100%;
 
-            margin-left:1ch;
+            margin-left:1.5ch;
 
             & img {
                 height:60%;
