@@ -4,7 +4,7 @@ import newIcon from './assets/plus.svg';
 import helpIcon from './assets/help.svg';
 import { useNavigate, useParams } from "react-router-dom";
 import Guide from './Guide';
-import { BACKEND_ADDRESS, fromHex, toHex } from './contants';
+import { BACKEND_ADDRESS, fromHex, toHex } from './constants';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark as highlightTheme } from 'react-syntax-highlighter/dist/esm/styles/hljs';

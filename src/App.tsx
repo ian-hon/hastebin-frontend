@@ -6,7 +6,7 @@ import filesIcon from './assets/files.svg';
 import helpIcon from './assets/help.svg';
 import deleteIcon from './assets/trash.svg';
 import { useNavigate } from "react-router-dom";
-import { BACKEND_ADDRESS, toHex } from './contants';
+import { BACKEND_ADDRESS, toHex } from './constants';
 
 function keyPressed(k: any) {
     if (k.key == 'Tab') {
