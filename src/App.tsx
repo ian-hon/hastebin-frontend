@@ -4,6 +4,7 @@ import saveIcon from './assets/save.svg';
 import newIcon from './assets/plus.svg';
 import filesIcon from './assets/files.svg';
 import helpIcon from './assets/help.svg';
+import deleteIcon from './assets/trash.svg';
 import { useNavigate } from "react-router-dom";
 
 function keyPressed(k: any) {
@@ -23,18 +24,65 @@ export default function App() {
     let navigate = useNavigate();
 
     const [content, changeContent] = useState('');
+    const [author, changeAuthor] = useState('');
 
-    const [isCreate, changeIsCreate] = useState(true);
     const [isMultiFile, changeIsMultiFile] = useState(false);
+
+    const [tabs, changeTabs] = useState<Array<Array<string>>>(new Array(
+        new Array('main', ''),
+    ));
+    const [activeTab, changeActiveTab] = useState(tabs[0]);
+    const [activeTabIndex, changeActiveTabIndex] = useState(0);
+
+    function switchTab(n: number) {
+        let t = tabs;
+        t[activeTabIndex][1] = content;
+        changeTabs(t);
+
+        changeActiveTabIndex(n);
+
+        changeActiveTab(tabs[n]);
+        changeContent(tabs[n][1]);
+    }
+
+    function changeMode(multiFile: boolean) {
+        changeIsMultiFile(multiFile);
+    }
+
+    function deleteTab(n: number) {
+        if (tabs.length == 1) {
+            return;
+        }
+
+        if (activeTabIndex == n) {
+            switchTab(0);
+        } else if (activeTabIndex > n) {
+            changeActiveTabIndex(a => a - 1);
+        }
+
+        let t = tabs;
+        t.splice(n, 1);
+        changeTabs(t);
+
+        changeTabs(t => [...t]); // mfw react hooks arent hooking
+    }
+
+    function addTab() {
+        changeTabs(t => [...t, new Array('new', '')]);
+    }
+
+    function renameTab(n: number, name: string) {
+        let t = tabs;
+        t[n][0] = name;
+        changeTabs(t);
+        changeTabs(t => [...t]);
+    }
 
     return (
         <div id={styles.page}>
             <div id={styles.navbar}>
                 <div id={styles.actions}>
-                    <div className={styles.action} aria-label={ isCreate ? '' : 'disabled' } onClick={() => {
-                        if (!isCreate) {
-                            return;
-                        }
+                    <div className={styles.action} onClick={() => {
                         console.log('save');
                     }}>
                         <img src={saveIcon} />
@@ -45,15 +93,20 @@ export default function App() {
                     <div className={styles.action} onClick={() => {
                         changeContent('');
                         navigate('/');
-                        changeIsCreate(true);
                         changeIsMultiFile(false);
+
+                        let t = new Array(new Array('main', ''));
+
+                        changeTabs(t);
+                        changeActiveTab(t[0]);
+                        changeActiveTabIndex(0);
                     }}>
                         <img src={newIcon} />
                         <h5>
                             new
                         </h5>
                     </div>
-                    <div className={styles.action}>
+                    <div className={styles.action} aria-label={isMultiFile ? 'active' : ''} onClick={() => { changeIsMultiFile(f => !f); }}>
                         <img src={filesIcon} />
                         <h5>
                             multiple files
@@ -90,7 +143,7 @@ export default function App() {
                             <option>c#</option>
                         </select>
                     </div>
-                    <input id={styles.signature} placeholder='author (optional)'></input>
+                    <input spellCheck={false} id={styles.signature} value={author} onChange={(e) => { changeAuthor(e.target.value) }} placeholder='author (optional)'></input>
                 </div>
             </div>
             <div id={styles.container}>
@@ -101,12 +154,24 @@ export default function App() {
                         <img src={saveIcon}/>
                     </div>
                 </div>
+                <div id={styles.explorer} aria-label={isMultiFile ? '' : 'single'}>
+                    {
+                        tabs.map((e, i) => <div className={styles.tab} key={i} aria-label={activeTab == e ? 'active' : ''} onClick={() => { switchTab(i); }}>
+                            <input spellCheck={false} value={e[0]} onChange={(event) => { renameTab(i, event.target.value) }}/>
+                            <img src={deleteIcon} onClick={(e) => {
+                                e.stopPropagation();
+                                deleteTab(i);
+                            }} />
+                        </div>)
+                    }
+                    <div id={styles.add} onClick={() => { addTab(); }}>
+                        <img src={newIcon} />
+                    </div>
+                </div>
                 <div id={styles.content}>
-                    <textarea readOnly={!isCreate} onKeyDown={keyPressed} spellCheck={false} onChange={(e) => {
+                    <textarea onKeyDown={keyPressed} spellCheck={false} onChange={(e) => {
                         changeContent(e.target.value);
-                        // changeParsed(highlight.highlightAuto(content).value);
                     }} value={content} />
-                    {/* <div dangerouslySetInnerHTML={{ __html: parsed }}/> */}
                 </div>
             </div>
         </div>
