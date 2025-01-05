@@ -272,7 +272,10 @@
         padding:0;
         margin:0 2ch;
 
-        overflow:scroll;
+        /* overflow-y:scroll !important;
+        overflow-x:hidden !important; */
+
+        overflow:scroll !important;
 
         transition-duration:0.3s;
 
@@ -284,8 +287,14 @@
             font-family: 'Source Code Pro';
     
             background:none !important;
-    
-            overflow:scroll !important;
+
+            /* overflow-x:scroll !important;
+            overflow-y:hidden !important; */
+
+            height:max-content !important;
+            width: max-content !important;
+
+            overflow:visible !important;
     
             &[aria-label='loading'] {
                 opacity: 0.5;
