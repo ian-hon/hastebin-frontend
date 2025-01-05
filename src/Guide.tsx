@@ -21,6 +21,11 @@ export default function Guide() {
             <h4>
                 the hassle-free, quick and simple way to share code
             </h4>
+            <h4 style={{
+                marginTop:'2em'
+            }}>
+                note : ignore the '?'s, i havent finished those
+            </h4>
         </div>
         <div id={styles.instructions}>
             <h3>
@@ -54,6 +59,13 @@ export default function Guide() {
                 <a href='https://ianhon.com' target='_blank'>
                     ian-hon
                 </a>
+                <h5 style={{
+                    marginLeft:'1ch',
+                    opacity: 0.5,
+                    fontStyle:'italic'
+                }}>
+                    in 3 days
+                </h5>
             </span>
             <div id={styles.stack}>
                 {/* <h5>axum.rs, sqlx, react.js, supabase, postgresql, aws, vercel</h5> */}

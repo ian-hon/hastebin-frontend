@@ -155,7 +155,7 @@ h3, h4, h5 {
         align-items: center;
 
         & > a {
-            margin-left:0.6ch;
+            margin-left:1ch;
             color:cornflowerblue;
         }
     }
