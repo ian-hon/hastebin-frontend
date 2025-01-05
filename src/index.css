@@ -11,16 +11,18 @@
     --border-radius:10px;
 }
 
-body {
+body, html {
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
     /* font-family: 'Noto Sans Kannada'; */
     font-weight: 400;
+
+    background:var(--background);
 }
 
-h1, h2, h3, h4, h5, h6, input, label, textarea {
+h1, h2, h3, h4, h5, h6, input, label, textarea, a {
     border-collapse: collapse;
     border:none;
     background:none;
@@ -43,6 +45,6 @@ h3 {font-size: 2.369rem; /* 37.92px */}
 
 h4 {font-size: 1.777rem; /* 28.48px */}
 
-h5, input, label, textarea {font-size: 1.333rem; /* 21.28px */}
+h5, a, input, label, textarea {font-size: 1.333rem; /* 21.28px */}
 
 small {font-size: 0.750rem; /* 12px */}

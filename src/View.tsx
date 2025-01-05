@@ -41,11 +41,15 @@ export default function View() {
             changeTabs(r['content']);
 
             changeParsed(r['content'][0][1]);
-            changeActiveTabIndex(0);
             changeActiveTab(r['content'][0]);
 
             let lang = highlight.highlightAuto(r['content'][0][1]).language;
             changeLanguage(lang == undefined ? '' : lang);
+
+            // change browser header
+            document.querySelectorAll('meta[name="theme-color"]').forEach(element => {
+                element.setAttribute('content', window.getComputedStyle(document.body).getPropertyValue(r['content'].length > 1 ? '--secondary' : '--background')); 
+            });
         })
     })
 
@@ -58,7 +62,6 @@ export default function View() {
 
     const [tabs, changeTabs] = useState(new Array());
     const [activeTab, changeActiveTab] = useState(tabs[0]);
-    const [activeTabIndex, changeActiveTabIndex] = useState(0);
 
     const [language, changeLanguage] = useState('');
 
@@ -67,7 +70,6 @@ export default function View() {
         changeLanguage(lang == undefined ? '' : lang);
 
         changeParsed(tabs[n][1]);
-        changeActiveTabIndex(n);
         changeActiveTab(tabs[n]);
     }
 
@@ -117,7 +119,7 @@ export default function View() {
                         </div>)
                     }
                 </div>
-                <div id={styles.parsedContainer}>
+                <div id={styles.parsedContainer} aria-label={tabs.length > 1 ? '' : 'extended'}>
                     <SyntaxHighlighter language={language} id={styles.parsed} style={highlightTheme} aria-label={fetched ? '' : 'loading'} customStyle={{
                         fontSize:'1.33rem',
                         fontFamily:'Source Code Pro',

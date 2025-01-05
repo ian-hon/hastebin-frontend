@@ -235,15 +235,19 @@
     & #content {
         height:calc(100% - 2em - 2em);
         width:calc(100% - 4ch);
-        /* width:max-content; */
-        /* width:100%; */
 
         padding:0;
         margin:1em 2ch;
 
         z-index: 10;
 
+        transition-duration:0.3s;
+
         /* background:blue; */
+
+        &[aria-label='extended'] {
+            height:calc(100% - 2em);
+        }
 
         & textarea {
             height:100%;
@@ -251,7 +255,7 @@
 
             /* background:red; */
 
-            white-space: nowrap;
+            white-space: pre-wrap;
 
             outline: none;
 
@@ -262,10 +266,19 @@
     }
 
     & #parsedContainer {
-        height:100%;
-        width:100%;
+        height:calc(100% - 2em - 2em);
+        width:calc(100% - 4ch);
+
+        padding:0;
+        margin:0 2ch;
 
         overflow:scroll;
+
+        transition-duration:0.3s;
+
+        &[aria-label='extended'] {
+            height:calc(100% - 2em);
+        }
 
         & #parsed {
             font-family: 'Source Code Pro';
@@ -336,9 +349,10 @@
                 overflow:hidden;
                 text-overflow: ellipsis;
 
-                height:fit-content;
+                height:100%;
 
                 max-width:10ch;
+                width:10ch;
 
                 font-family: 'Source Code Pro';
             }

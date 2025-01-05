@@ -11,12 +11,13 @@ import { BACKEND_ADDRESS, toHex } from './constants';
 function keyPressed(k: any) {
     if (k.key == 'Tab') {
         k.preventDefault();
-        console.log('tab pressed');
 
         let start = k.target.selectionStart;
         let end = k.target.selectionEnd;
 
+        console.log(k.target.value);
         k.target.value = k.target.value.substring(0, start) + '\t' + k.target.value.substring(end);
+        console.log(JSON.stringify(k.target.value));
         k.target.selectionStart = k.target.selectionEnd = start + 1;
     }
 }
@@ -48,6 +49,11 @@ export default function App() {
 
     function changeMode(multiFile: boolean) {
         changeIsMultiFile(multiFile);
+
+        // change browser header
+        document.querySelectorAll('meta[name="theme-color"]').forEach(element => {
+            element.setAttribute('content', window.getComputedStyle(document.body).getPropertyValue(multiFile ? '--secondary' : '--background')); 
+        });
 
         // delete all except the current active file
         let t = new Array(activeTab);
@@ -210,8 +216,8 @@ export default function App() {
                         <img src={newIcon} />
                     </div>
                 </div>
-                <div id={styles.content}>
-                    <textarea onKeyDown={keyPressed} spellCheck={false} onChange={(e) => {
+                <div id={styles.content} aria-label={isMultiFile ? '' : 'extended'}>
+                    <textarea autoFocus={true} onKeyDown={keyPressed} spellCheck={false} onChange={(e) => {
                         changeContent(e.target.value);
                     }} value={content} />
                 </div>
