@@ -129,69 +129,71 @@ export default function App() {
     return (
         <div id={styles.page}>
             <div id={styles.navbar}>
-                <div id={styles.actions}>
-                    <div className={styles.action} onClick={() => {
-                        save();
-                    }}>
-                        <img src={saveIcon} />
-                        <h5>
-                            save
-                        </h5>
-                    </div>
-                    <div className={styles.action} onClick={() => {
-                        changeContent('');
-                        changeAuthor('');
-                        navigate('/');
-                        changeIsMultiFile(false);
+                <div id={styles.container}>
+                    <div id={styles.actions}>
+                        <div className={styles.action} onClick={() => {
+                            save();
+                        }}>
+                            <img src={saveIcon} />
+                            <h5>
+                                save
+                            </h5>
+                        </div>
+                        <div className={styles.action} onClick={() => {
+                            changeContent('');
+                            changeAuthor('');
+                            navigate('/');
+                            changeIsMultiFile(false);
 
-                        let t = new Array(new Array('main', ''));
-                        changeTabs(t);
-                        changeActiveTab(t[0]);
-                        changeActiveTabIndex(0);
-                    }}>
-                        <img src={newIcon} />
-                        <h5>
-                            new
-                        </h5>
+                            let t = new Array(new Array('main', ''));
+                            changeTabs(t);
+                            changeActiveTab(t[0]);
+                            changeActiveTabIndex(0);
+                        }}>
+                            <img src={newIcon} />
+                            <h5>
+                                new
+                            </h5>
+                        </div>
+                        <div className={styles.action} aria-label={isMultiFile ? 'active' : ''} onClick={() => { changeMode(!isMultiFile); }}>
+                            <img src={filesIcon} />
+                            <h5>
+                                multiple files
+                            </h5>
+                        </div>
+                        <div className={styles.action} onClick={() => {
+                            navigate('/help')
+                        }}>
+                            <img src={helpIcon} />
+                            <h5>
+                                how to use
+                            </h5>
+                        </div>
                     </div>
-                    <div className={styles.action} aria-label={isMultiFile ? 'active' : ''} onClick={() => { changeMode(!isMultiFile); }}>
-                        <img src={filesIcon} />
-                        <h5>
-                            multiple files
-                        </h5>
+                    <hr/>
+                    <div id={styles.details}>
+                        <div id={styles.language}>
+                            <label htmlFor="languageSelect">
+                                language : 
+                            </label>
+                            <select id={styles.languageSelect}>
+                                <optgroup label="popular">
+                                    <option>py</option>
+                                    <option>java</option>
+                                    <option>javascript</option>
+                                    <option>html</option>
+                                    <option>css</option>
+                                    <option>rust</option>
+                                </optgroup>
+                                <hr/>
+                                <option>asm</option>
+                                <option>c</option>
+                                <option>cpp</option>
+                                <option>c#</option>
+                            </select>
+                        </div>
+                        <input spellCheck={false} id={styles.signature} value={author} onChange={(e) => { changeAuthor(e.target.value) }} placeholder='author (optional)'></input>
                     </div>
-                    <div className={styles.action} onClick={() => {
-                        navigate('/help')
-                    }}>
-                        <img src={helpIcon} />
-                        <h5>
-                            how to use
-                        </h5>
-                    </div>
-                </div>
-                <hr/>
-                <div id={styles.details}>
-                    <div id={styles.language}>
-                        <label htmlFor="languageSelect">
-                            language : 
-                        </label>
-                        <select id={styles.languageSelect}>
-                            <optgroup label="popular">
-                                <option>py</option>
-                                <option>java</option>
-                                <option>javascript</option>
-                                <option>html</option>
-                                <option>css</option>
-                                <option>rust</option>
-                            </optgroup>
-                            <hr/>
-                            <option>asm</option>
-                            <option>c</option>
-                            <option>cpp</option>
-                            <option>c#</option>
-                        </select>
-                    </div>
-                    <input spellCheck={false} id={styles.signature} value={author} onChange={(e) => { changeAuthor(e.target.value) }} placeholder='author (optional)'></input>
                 </div>
             </div>
             <div id={styles.container}>
