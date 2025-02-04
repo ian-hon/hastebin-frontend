@@ -3,6 +3,7 @@ import styles from './App.module.css';
 import newIcon from './assets/plus.svg';
 import helpIcon from './assets/help.svg';
 import eyeIcon from './assets/eye.svg';
+import filledArrowIcon from './assets/filled-arrow.svg';
 import { useNavigate, useParams } from "react-router-dom";
 import Guide from './Guide';
 import { BACKEND_ADDRESS, fromHex, toHex } from './constants';
@@ -56,6 +57,8 @@ export default function View() {
         })
     })
 
+    const [navbarActive, changeNavbarActive] = useState(true);
+
     const [fetched, changeFetched] = useState(false);
 
     const [parsed, changeParsed] = useState('');
@@ -83,57 +86,67 @@ export default function View() {
     return (
         <div id={styles.page}>
             <div id={styles.navbar}>
-                <div id={styles.actions}>
-                    <div className={styles.action} onClick={() => {
-                        navigate('/');
-                    }}>
-                        <img src={newIcon} />
-                        <h5>
-                            new
-                        </h5>
-                    </div>
-                    <div className={styles.action} onClick={() => {
-                        navigate('/help')
-                    }}>
-                        <img src={helpIcon} />
-                        <h5>
-                            how to use
-                        </h5>
-                    </div>
-                </div>
-                <hr/>
-                <div id={styles.details}>
-                    <h5 id={styles.signature} aria-label={author.length == 0 ? 'none' : ''}>
-                        {author.length == 0 ? 'no author provided' : `author : ${author}`}
-                    </h5>
-                    <div id={styles.views}>
-                        <img src={eyeIcon} />
-                        <h5>
-                            {views}
-                        </h5>
-                    </div>
-                </div>
-                <div id={styles.qrContainer}>
-                    <Canvas text={window.location.href} options={{
-                        errorCorrectionLevel: 'M',
-                        margin: 1,
-                        scale: 4,
-                        color: {
-                            dark: '#e2e1f9',
-                            light: '#252739ff',
-                        },
-                    }} />
-                </div>
-                <div id={styles.shareableLink} onClick={() => {
-                    navigator.clipboard.writeText(window.location.href);
+                <div id={styles.toggle} onClick={() => {
+                    changeNavbarActive(!navbarActive);
                 }}>
-                    <h5>
-                        {window.location.href}
-                    </h5>
-                    <h5>
-                        click to copy
-                    </h5>
+                    <img src={filledArrowIcon} aria-label={navbarActive ? 'open' : 'closed'}/>
                 </div>
+                {
+                    navbarActive ? 
+                    <div id={styles.container}>
+                        <div id={styles.actions}>
+                            <div className={styles.action} onClick={() => {
+                                navigate('/');
+                            }}>
+                                <img src={newIcon} />
+                                <h5>
+                                    new
+                                </h5>
+                            </div>
+                            <div className={styles.action} onClick={() => {
+                                navigate('/help')
+                            }}>
+                                <img src={helpIcon} />
+                                <h5>
+                                    how to use
+                                </h5>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div id={styles.details}>
+                            <h5 id={styles.signature} aria-label={author.length == 0 ? 'none' : ''}>
+                                {author.length == 0 ? 'no author provided' : `author : ${author}`}
+                            </h5>
+                            <div id={styles.views}>
+                                <img src={eyeIcon} />
+                                <h5>
+                                    {views}
+                                </h5>
+                            </div>
+                        </div>
+                        <div id={styles.qrContainer}>
+                            <Canvas text={window.location.href} options={{
+                                errorCorrectionLevel: 'M',
+                                margin: 1,
+                                scale: 4,
+                                color: {
+                                    dark: '#e2e1f9',
+                                    light: '#252739ff',
+                                },
+                            }} />
+                        </div>
+                        <div id={styles.shareableLink} onClick={() => {
+                            navigator.clipboard.writeText(window.location.href);
+                        }}>
+                            <h5>
+                                {window.location.href}
+                            </h5>
+                            <h5>
+                                click to copy
+                            </h5>
+                        </div>
+                    </div> : <></>
+                }
             </div>
             <div id={styles.container}>
                 <div id={styles.explorer} aria-label={tabs.length > 1 ? '' : 'single'}>

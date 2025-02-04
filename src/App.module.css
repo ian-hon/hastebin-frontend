@@ -18,10 +18,14 @@
     position:absolute;
     right:0;
 
+    display:flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+
     z-index: 500;
 
-    /* width:var(--navbar-width); */
-    padding:1em 2ch;
+    padding:1em 2ch 1em 1ch;
     margin:0;
 
     overflow:hidden;
@@ -202,7 +206,7 @@
             }
 
             & h5:last-of-type {
-                opacity: 1;
+                opacity: 0.7;
             }
         }
 
@@ -210,7 +214,7 @@
             font-size: 0.8rem;
             margin:0.2em;
             text-align: center;
-            opacity: 1;
+            opacity: 0.7;
             font-style: italic;
 
             transition-duration: 0.2s;
@@ -219,12 +223,35 @@
         & h5:last-of-type {
             position:absolute;
 
-            top :50%;
-            left: 50%;
+            top:50%;
+            left:50%;
 
             transform:translate(-50%, -50%);
             
             opacity: 0;
+        }
+    }
+
+    & #toggle {
+        cursor: pointer;
+
+        display:flex;
+        justify-content: center;
+        align-items: center;
+
+        & img {
+            width:2ch;
+            height:2ch;
+
+            margin:2ch 0;
+            margin-left:1ch;
+
+            opacity: 0.5;
+
+            &[aria-label='open'] {
+                transform:rotateY(180deg);
+                margin-left:0;
+            }
         }
     }
 }
