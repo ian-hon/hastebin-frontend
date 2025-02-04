@@ -172,6 +172,61 @@
             }
         }
     }
+
+    & #qrContainer {
+        display:flex;
+        justify-content: center;
+        align-items: center;
+
+        width:100%;
+
+        margin-top:1em;
+
+        & canvas {
+            height:8em;
+            width:8em;
+            aspect-ratio: 1;
+        }
+    }
+
+    & #shareableLink {
+        position:relative;
+
+        cursor:copy;
+
+        user-select: none;
+
+        &:hover {
+            & h5:first-of-type {
+                opacity: 0;
+            }
+
+            & h5:last-of-type {
+                opacity: 1;
+            }
+        }
+
+        & h5 {
+            font-size: 0.8rem;
+            margin:0.2em;
+            text-align: center;
+            opacity: 1;
+            font-style: italic;
+
+            transition-duration: 0.2s;
+        }
+
+        & h5:last-of-type {
+            position:absolute;
+
+            top :50%;
+            left: 50%;
+
+            transform:translate(-50%, -50%);
+            
+            opacity: 0;
+        }
+    }
 }
 
 #container {

@@ -9,6 +9,7 @@ import { BACKEND_ADDRESS, fromHex, toHex } from './constants';
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark as highlightTheme } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { useQRCode } from 'next-qrcode';
 
 // import 'highlight.js/styles/tokyo-night-dark.css';
 import highlight from 'highlight.js';
@@ -16,6 +17,8 @@ import highlight from 'highlight.js';
 export default function View() {
     let navigate = useNavigate();
     let params = useParams();
+
+    const { Canvas } = useQRCode();
 
     useEffect(() => {
         if ((params.id == undefined) || (params.id == 'help') || (fetched)) {
@@ -109,6 +112,27 @@ export default function View() {
                             {views}
                         </h5>
                     </div>
+                </div>
+                <div id={styles.qrContainer}>
+                    <Canvas text={window.location.href} options={{
+                        errorCorrectionLevel: 'M',
+                        margin: 1,
+                        scale: 4,
+                        color: {
+                            dark: '#e2e1f9',
+                            light: '#252739ff',
+                        },
+                    }} />
+                </div>
+                <div id={styles.shareableLink} onClick={() => {
+                    navigator.clipboard.writeText(window.location.href);
+                }}>
+                    <h5>
+                        {window.location.href}
+                    </h5>
+                    <h5>
+                        click to copy
+                    </h5>
                 </div>
             </div>
             <div id={styles.container}>
