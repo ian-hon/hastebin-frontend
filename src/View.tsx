@@ -3,6 +3,7 @@ import styles from './App.module.css';
 import newIcon from './assets/plus.svg';
 import helpIcon from './assets/help.svg';
 import eyeIcon from './assets/eye.svg';
+import copyIcon from './assets/copy.svg';
 import filledArrowIcon from './assets/filled-arrow.svg';
 import { useNavigate, useParams } from "react-router-dom";
 import Guide from './Guide';
@@ -31,30 +32,30 @@ export default function View() {
 
         // check for presence
         fetch(`${BACKEND_ADDRESS}/fetch/${id}`)
-        .then((r) => r.json())
-        .then((r) => {
-            if (r == null) {
-                navigate('/');
-                return;
-            }
+            .then((r) => r.json())
+            .then((r) => {
+                if (r == null) {
+                    navigate('/');
+                    return;
+                }
 
-            changeFetched(true);
-            changeAuthor(r['signature']);
-            changeViews(r['views']);
+                changeFetched(true);
+                changeAuthor(r['signature']);
+                changeViews(r['views']);
 
-            changeTabs(r['content']);
+                changeTabs(r['content']);
 
-            changeParsed(r['content'][0][1]);
-            changeActiveTab(r['content'][0]);
+                changeParsed(r['content'][0][1]);
+                changeActiveTab(r['content'][0]);
 
-            let lang = highlight.highlightAuto(r['content'][0][1]).language;
-            changeLanguage(lang == undefined ? '' : lang);
+                let lang = highlight.highlightAuto(r['content'][0][1]).language;
+                changeLanguage(lang == undefined ? '' : lang);
 
-            // change browser header
-            document.querySelectorAll('meta[name="theme-color"]').forEach(element => {
-                element.setAttribute('content', window.getComputedStyle(document.body).getPropertyValue(r['content'].length > 1 ? '--secondary' : '--background')); 
-            });
-        })
+                // change browser header
+                document.querySelectorAll('meta[name="theme-color"]').forEach(element => {
+                    element.setAttribute('content', window.getComputedStyle(document.body).getPropertyValue(r['content'].length > 1 ? '--secondary' : '--background'));
+                });
+            })
     })
 
     const [navbarActive, changeNavbarActive] = useState(true);
@@ -80,7 +81,7 @@ export default function View() {
     }
 
     if (params.id == 'help') {
-        return <Guide/>
+        return <Guide />
     }
 
     return (
@@ -89,63 +90,71 @@ export default function View() {
                 <div id={styles.toggle} onClick={() => {
                     changeNavbarActive(!navbarActive);
                 }}>
-                    <img src={filledArrowIcon} aria-label={navbarActive ? 'open' : 'closed'}/>
+                    <img src={filledArrowIcon} aria-label={navbarActive ? 'open' : 'closed'} />
                 </div>
                 {
-                    navbarActive ? 
-                    <div id={styles.container}>
-                        <div id={styles.actions}>
-                            <div className={styles.action} onClick={() => {
-                                navigate('/');
+                    navbarActive ?
+                        <div id={styles.container}>
+                            <div id={styles.actions}>
+                                <div className={styles.action} onClick={() => {
+                                    navigator.clipboard.writeText(parsed);
+                                }}>
+                                    <img src={copyIcon} />
+                                    <h5>
+                                        copy all
+                                    </h5>
+                                </div>
+                                <div className={styles.action} onClick={() => {
+                                    navigate('/');
+                                }}>
+                                    <img src={newIcon} />
+                                    <h5>
+                                        new
+                                    </h5>
+                                </div>
+                                <div className={styles.action} onClick={() => {
+                                    navigate('/help')
+                                }}>
+                                    <img src={helpIcon} />
+                                    <h5>
+                                        how to use
+                                    </h5>
+                                </div>
+                            </div>
+                            <hr />
+                            <div id={styles.details}>
+                                <h5 id={styles.signature} aria-label={author.length == 0 ? 'none' : ''}>
+                                    {author.length == 0 ? 'no author provided' : `author : ${author}`}
+                                </h5>
+                                <div id={styles.views}>
+                                    <img src={eyeIcon} />
+                                    <h5>
+                                        {views}
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id={styles.qrContainer}>
+                                <Canvas text={window.location.href} options={{
+                                    errorCorrectionLevel: 'M',
+                                    margin: 1,
+                                    scale: 4,
+                                    color: {
+                                        dark: '#e2e1f9',
+                                        light: '#252739ff',
+                                    },
+                                }} />
+                            </div>
+                            <div id={styles.shareableLink} onClick={() => {
+                                navigator.clipboard.writeText(window.location.href);
                             }}>
-                                <img src={newIcon} />
                                 <h5>
-                                    new
+                                    {window.location.href}
+                                </h5>
+                                <h5>
+                                    click to copy
                                 </h5>
                             </div>
-                            <div className={styles.action} onClick={() => {
-                                navigate('/help')
-                            }}>
-                                <img src={helpIcon} />
-                                <h5>
-                                    how to use
-                                </h5>
-                            </div>
-                        </div>
-                        <hr/>
-                        <div id={styles.details}>
-                            <h5 id={styles.signature} aria-label={author.length == 0 ? 'none' : ''}>
-                                {author.length == 0 ? 'no author provided' : `author : ${author}`}
-                            </h5>
-                            <div id={styles.views}>
-                                <img src={eyeIcon} />
-                                <h5>
-                                    {views}
-                                </h5>
-                            </div>
-                        </div>
-                        <div id={styles.qrContainer}>
-                            <Canvas text={window.location.href} options={{
-                                errorCorrectionLevel: 'M',
-                                margin: 1,
-                                scale: 4,
-                                color: {
-                                    dark: '#e2e1f9',
-                                    light: '#252739ff',
-                                },
-                            }} />
-                        </div>
-                        <div id={styles.shareableLink} onClick={() => {
-                            navigator.clipboard.writeText(window.location.href);
-                        }}>
-                            <h5>
-                                {window.location.href}
-                            </h5>
-                            <h5>
-                                click to copy
-                            </h5>
-                        </div>
-                    </div> : <></>
+                        </div> : <></>
                 }
             </div>
             <div id={styles.container}>
@@ -158,11 +167,11 @@ export default function View() {
                 </div>
                 <div id={styles.parsedContainer} aria-label={tabs.length > 1 ? '' : 'extended'}>
                     <SyntaxHighlighter language={language} id={styles.parsed} style={highlightTheme} aria-label={fetched ? '' : 'loading'} customStyle={{
-                        fontSize:'1.33rem',
-                        fontFamily:'Source Code Pro',
-                        overflow:'scroll'
+                        fontSize: '1.33rem',
+                        fontFamily: 'Source Code Pro',
+                        overflow: 'scroll'
                     }}>
-                        { fetched ? parsed : 'fetching code...' }
+                        {fetched ? parsed : 'fetching code...'}
                     </SyntaxHighlighter>
                 </div>
             </div>
