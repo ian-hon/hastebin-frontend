@@ -8,11 +8,10 @@
     --secondary: #1e202f;
     --accent: #c0a1f0;
 
-    --border-radius: 10px;
+    --border-radius:10px;
 }
 
-body,
-html {
+body, html {
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,67 +19,32 @@ html {
     /* font-family: 'Noto Sans Kannada'; */
     font-weight: 400;
 
-    background: var(--background);
+    background:var(--background);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-input,
-label,
-textarea,
-a,
-p {
+h1, h2, h3, h4, h5, h6, input, label, textarea, a {
     border-collapse: collapse;
-    border: none;
-    background: none;
-    font-family: 'Noto Sans';
+    border:none;
+    background:none;
+
     /* font-family: 'Noto Sans Kannada'; */
+    font-family: 'Noto Sans';
     /* font-family: 'Source Code Pro'; */
     font-weight: 500;
 
-    color: var(--text);
+    color:var(--text);
 }
 
-html {
-    font-size: 100%;
-}
+html {font-size: 100%;} /* 16px */
 
-/* 16px */
+h1 {font-size: 4.210rem; /* 67.36px */}
 
-h1 {
-    font-size: 4.210rem;
-    /* 67.36px */
-}
+h2 {font-size: 3.158rem; /* 50.56px */}
 
-h2 {
-    font-size: 3.158rem;
-    /* 50.56px */
-}
+h3 {font-size: 2.369rem; /* 37.92px */}
 
-h3 {
-    font-size: 2.369rem;
-    /* 37.92px */
-}
+h4 {font-size: 1.777rem; /* 28.48px */}
 
-h4 {
-    font-size: 1.777rem;
-    /* 28.48px */
-}
+h5, a, input, label, textarea {font-size: 1.333rem; /* 21.28px */}
 
-h5,
-a,
-input,
-label,
-textarea {
-    font-size: 1.333rem;
-    /* 21.28px */
-}
-
-small {
-    font-size: 0.750rem;
-    /* 12px */
-}
+small {font-size: 0.750rem; /* 12px */}
