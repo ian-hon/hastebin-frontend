@@ -5,8 +5,8 @@ import View from "./View";
 export default function Intermediary() {
     return (
         <Routes>
-            <Route path='/:id' element={<App />} />
-            <Route path='/' element={<App />} />
+            <Route path='/:id' element={<View/>} />
+            <Route path='/' element={<App/>} />
         </Routes>
     )
 }
