@@ -6,6 +6,9 @@ import filesIcon from './assets/files.svg';
 import chevronIcon from './assets/chevron-left.svg';
 import { Link } from 'react-router-dom';
 
+import singularGif from './assets/walkthrough/singular.gif';
+import multifileGif from './assets/walkthrough/multifile.gif';
+
 export default function Guide() {
     return <div id={styles.page}>
         <Link to='/' id={styles.return}>
@@ -21,11 +24,11 @@ export default function Guide() {
             <h4>
                 the hassle-free, quick and simple way to share code
             </h4>
-            <h4 style={{
+            {/* <h4 style={{
                 marginTop:'2em'
             }}>
                 note : ignore the '?'s, i havent finished those
-            </h4>
+            </h4> */}
         </div>
         <div id={styles.instructions}>
             <h3>
@@ -36,11 +39,11 @@ export default function Guide() {
                     <h4>1. paste code</h4>
                     <div>
                         <h4>2. press</h4>
-                        <img src={saveIcon}/>
+                        <img src={saveIcon} />
                     </div>
                     <h4>3. share url</h4>
                 </div>
-                <img src={instructionGif}/>
+                <img src={singularGif} />
             </div>
         </div>
         <div id={styles.multiFile}>
@@ -48,9 +51,9 @@ export default function Guide() {
             <div>
                 <div>
                     <h4>press</h4>
-                    <img src={filesIcon}/>
+                    <img src={filesIcon} />
                 </div>
-                <img src={instructionGif} />
+                <img src={multifileGif} />
             </div>
         </div>
         <div id={styles.credits}>
@@ -60,9 +63,9 @@ export default function Guide() {
                     ian-hon
                 </a>
                 <h5 style={{
-                    marginLeft:'1ch',
+                    marginLeft: '1ch',
                     opacity: 0.5,
-                    fontStyle:'italic'
+                    fontStyle: 'italic'
                 }}>
                     in 3 days
                 </h5>

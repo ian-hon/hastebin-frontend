@@ -1,106 +1,111 @@
 #page {
-    display:flex;
+    display: flex;
     justify-content: flex-start;
     align-items: center;
 
     flex-direction: column;
 
-    min-height:100%;
-    width:100%;
+    min-height: 100%;
+    width: 100%;
 
-    margin:10em 0;
-    padding:0;
+    margin: 10em 0;
+    padding: 0;
 
-    overflow:hidden;
+    overflow: hidden;
 }
 
-h3, h4, h5 {
-    margin:0;
-    padding:0;
+h3,
+h4,
+h5 {
+    margin: 0;
+    padding: 0;
 }
 
 #return {
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
 
-    padding:1ch 1em 1ch 0.5em;
-    top:1em;
-    left:1.5ch;
+    padding: 1ch 1em 1ch 0.5em;
+    top: 1em;
+    left: 1.5ch;
     position: fixed;
 
-    border-radius:var(--border-radius);
-    background:var(--secondary);
+    border-radius: var(--border-radius);
+    background: var(--secondary);
 
-    transition-duration:0.3s;
+    transition-duration: 0.3s;
     text-decoration: none;
 
     & h5 {
         font-style: italic;
-        margin-left:0.5ch;
+        margin-left: 0.5ch;
     }
 
     & img {
-        height:1em;
+        height: 1em;
     }
 
-    & h5, & img {
+    & h5,
+    & img {
         opacity: 0.6;
-        transition-duration:0.3s;
+        transition-duration: 0.3s;
     }
 
     &:hover {
-        transform:translateX(-1ch);
+        transform: translateX(-1ch);
 
-        & h5, & img {
+        & h5,
+        & img {
             opacity: 0.8;
         }
     }
 }
 
 #header {
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 
     & h3 {
-        margin-bottom:0.3em;
+        margin-bottom: 0.3em;
     }
 
     & h4 {
-        font-style:italic;
+        font-style: italic;
         opacity: 0.6;
     }
 }
 
 #instructions {
-    display:flex;
+    display: flex;
     justify-content: flex-start;
     flex-direction: column;
 
-    width:40%;
-    margin-top:8em;
+    width: 60%;
+    margin-top: 8em;
 
     & #steps {
-        display:flex;
+        display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: row;
 
-        & > img {
-            height:10em;
+        &>img {
+            width: 60%;
+            border-radius: 1em;
         }
 
-        & > div > div {
-            display:flex;
+        &>div>div {
+            display: flex;
             justify-content: flex-start;
             align-items: center;
             flex-direction: row;
 
             & img {
-                margin-left:1ch;
-                height:2em;
+                margin-left: 1ch;
+                height: 2em;
                 opacity: 0.8;
             }
         }
@@ -108,59 +113,61 @@ h3, h4, h5 {
 }
 
 #multiFile {
-    display:flex;
+    display: flex;
     justify-content: flex-start;
     align-items: flex-start;
 
     flex-direction: column;
 
-    width:40%;
-    margin-top:8em;
+    width: 60%;
+    margin-top: 8em;
 
-    & > div {
-        display:flex;
+    &>div {
+        display: flex;
         justify-content: space-between;
         align-items: center;
 
         width: 100%;
 
-        & > div {
-            display:flex;
+        &>div {
+            display: flex;
             justify-content: center;
             align-items: center;
 
             & img {
-                height:2em;
-                margin-left:1ch;
+                height: 2em;
+                margin-left: 1ch;
                 opacity: 0.8;
             }
         }
 
         & img {
-            height:10em;
+            width: 60%;
+            border-radius: 1em;
         }
     }
 }
 
 #credits {
-    margin-top:10em;
+    margin-top: 10em;
 
-    & h5, & a {
+    & h5,
+    & a {
         font-family: 'Source Code Pro';
     }
 
-    & > span {
-        display:flex;
+    &>span {
+        display: flex;
         justify-content: center;
         align-items: center;
 
-        & > a {
-            margin-left:1ch;
-            color:cornflowerblue;
+        &>a {
+            margin-left: 1ch;
+            color: cornflowerblue;
         }
     }
 
     & #stack {
-        margin-top:2em;
+        margin-top: 2em;
     }
 }
