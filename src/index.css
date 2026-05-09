@@ -7,7 +7,7 @@
 
 * {
   /* why isnt this enabled by default */
-  box-sizing: content-box;
+  box-sizing: border-box;
 }
 
 body {
