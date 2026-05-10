@@ -16,7 +16,7 @@ export interface CreatePasteResponse {
 }
 
 export const pasteApi = {
-    async fetchPaste(id: number | string): Promise<Paste> {
+    async fetchPaste(id: number): Promise<Paste> {
         const response = await apiClient.get<Paste>(`/paste/fetch/${id}`);
         return response.data;
     },

@@ -2,6 +2,8 @@ import { ChevronDown, CircleQuestionMark, Copy, FileDiff, GitFork, Plus } from '
 import CustomQRCode from './CustomQRCode';
 import type { Paste } from '../types';
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { toHex } from '../lib/utils';
 
 export interface ViewingTaskBarProps {
     paste: Paste
@@ -11,6 +13,8 @@ const ViewingTaskBar = ({
     paste,
     ...props
 }: ViewingTaskBarProps) => {
+    const navigate = useNavigate();
+
     const [isOpened, setOpened] = useState(true);
     const contentRef = useRef<HTMLDivElement>(null);
     const [contentHeight, setContentHeight] = useState(0);
@@ -53,17 +57,17 @@ const ViewingTaskBar = ({
                         {
                             text: 'new paste',
                             icon: (p: any) => <Plus {...p} />,
-                            onClick: () => { },
+                            onClick: () => { navigate('/') },
                         },
                         {
                             text: 'copy',
                             icon: (p: any) => <Copy {...p} />,
-                            onClick: () => { }
+                            onClick: () => { navigate(`/?copy=${toHex(paste.id)}`) }
                         },
                         {
                             text: 'fork',
                             icon: (p: any) => <GitFork {...p} />,
-                            onClick: () => { }
+                            onClick: () => { navigate(`/?fork=${toHex(paste.id)}`) }
                         },
                         ...(paste.forked_from ? [{
                             text: 'diff',
@@ -73,7 +77,7 @@ const ViewingTaskBar = ({
                         {
                             text: 'guide',
                             icon: (p: any) => <CircleQuestionMark {...p} />,
-                            onClick: () => { }
+                            onClick: () => { navigate('/guide') }
                         },
                     ].map((i, index) => <div key={index} onClick={i.onClick} className={`
                         flex flex-row gap-2 items-center justify-between cursor-pointer

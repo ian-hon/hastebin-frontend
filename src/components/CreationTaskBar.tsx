@@ -1,12 +1,19 @@
 import { CircleQuestionMark, ClipboardPaste, Plus, RefreshCcw } from 'lucide-react';
 import { useState } from 'react';
 import { generatePhrase } from '../lib/bip39';
+import { useNavigate } from 'react-router';
+import type { ExpiryOption } from '../types';
 
-export type ExpiryOption = 'none' | '1_hour' | '6_hour' | '12_hour' | '1_day' | '3_day' | '7_day' | '30_day';
+export interface CreationTaskBarProps {
+    onPaste: (options: { author: string; expiry: ExpiryOption; signature: string }) => void;
+}
 
 const CreationTaskBar = ({
+    onPaste,
     ...props
-}) => {
+}: CreationTaskBarProps) => {
+    const navigate = useNavigate();
+
     const [author, setAuthor] = useState<string>('');
     const [expiry, setExpiry] = useState<ExpiryOption>('none');
     const [signature, setSignature] = useState<string>('');
@@ -34,12 +41,12 @@ const CreationTaskBar = ({
                     {
                         text: 'new paste',
                         icon: (p: any) => <Plus {...p} />,
-                        onClick: () => { },
+                        onClick: () => { navigate('/') },
                     },
                     {
                         text: 'guide',
                         icon: (p: any) => <CircleQuestionMark {...p} />,
-                        onClick: () => { }
+                        onClick: () => { navigate('/guide') }
                     }
                 ].map((i, index) => <div key={index} onClick={i.onClick} className={`
                         flex flex-row gap-2 items-center justify-between cursor-pointer
@@ -51,8 +58,8 @@ const CreationTaskBar = ({
                 </div>)
             }
             <div className="flex-1 flex flex-row justify-end">
-                <div className="input-base flex flex-row self-end w-fit items-center gap-[1ch] bg-accentDim border-accent cursor-pointer">
-                    <h3 className="text-accent font-semibold">paste!</h3>
+                <div className="input-base flex flex-row self-end w-fit items-center gap-[1ch] bg-accentDim border-accent cursor-pointer" onClick={() => onPaste({ author, expiry, signature })}>
+                    <h3 className="text-accent">paste!</h3>
                     <ClipboardPaste className="" color="var(--color-accent)" size={16} />
                 </div>
             </div>
