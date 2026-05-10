@@ -19,9 +19,10 @@ const FileBrowser = ({
     onChangeFile,
     onDeleteFile,
 
-    onRenameFile
+    onRenameFile,
+    ...props
 }: FileBrowserProps) => {
-    return <div className="bg-secondary w-full h-10 flex flex-row justify-start items-center">
+    return <div className="bg-secondary w-full h-10 flex flex-row justify-start items-center" {...props}>
         {
             files.map((f, index) =>
                 <div onClick={() => { onChangeFile(index) }} key={index} className={`${index == activeFile ? "bg-background" : ""} h-full w-fit gap-4 px-4 py-3 flex flex-row justify-between items-center cursor-pointer`}>

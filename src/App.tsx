@@ -4,16 +4,18 @@ import { useEffect, useState } from 'react';
 import TaskBar from './components/TaskBar';
 import type { PasteFile } from './types';
 
-function keyPressed(k: any) {
+// https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/selectionStart
+function keyPressed(k: React.KeyboardEvent<HTMLTextAreaElement>) {
   if (k.key == 'Tab') {
     k.preventDefault();
 
-    const start = k.target.selectionStart;
-    const end = k.target.selectionEnd;
+    // https://developer.mozilla.org/en-US/docs/Web/API/Event/currentTarget
+    const start = k.currentTarget.selectionStart;
+    const end = k.currentTarget.selectionEnd;
 
     // insert a \t at cursor, then artificially move the cursor forward by one
-    k.target.value = k.target.value.substring(0, start) + '\t' + k.target.value.substring(end);
-    k.target.selectionStart = k.target.selectionEnd = start + 1;
+    k.currentTarget.value = k.currentTarget.value.substring(0, start) + '\t' + k.currentTarget.value.substring(end);
+    k.currentTarget.selectionStart = k.currentTarget.selectionEnd = start + 1;
   }
 }
 
@@ -66,6 +68,7 @@ function App() {
     if (activeFile == index) {
       setActiveFile(0);
     } else {
+      // if the active file is after the deleted one, decrement the active file
       if (index < activeFile) {
         setActiveFile(f => f - 1);
       }
@@ -86,7 +89,7 @@ function App() {
         setContent(e.target.value);
       }} value={content} />
     </div>
-    <TaskBar className="absolute" />
+    <TaskBar createMode={true} />
   </div>
 }
 
