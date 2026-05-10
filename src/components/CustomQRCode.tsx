@@ -10,7 +10,8 @@ export interface QRCodeProps {
     size: number,
     // cellSize: number,
     gap: number,
-    borderRadius: number
+    borderRadius: number,
+    errorCorrectionLevel?: QRCode.QRCodeErrorCorrectionLevel
 }
 
 const CustomQRCode = ({
@@ -20,12 +21,13 @@ const CustomQRCode = ({
     // pixelStyles,
     size,
     gap,
-    borderRadius
+    borderRadius,
+    errorCorrectionLevel = "L"
 }: QRCodeProps) => {
     const modules: QRCode.BitMatrix = useMemo(() => {
-        const qr = QRCode.create(value, { errorCorrectionLevel: "M" });
+        const qr = QRCode.create(value, { errorCorrectionLevel });
         return qr.modules;
-    }, [value]);
+    }, [value, errorCorrectionLevel]);
 
     const length = modules.size;
     const actualCellSize = (size - gap * length) / length;

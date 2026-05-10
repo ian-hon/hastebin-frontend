@@ -1,16 +1,14 @@
 @import "tailwindcss";
 
-a {
-    /* color: #2d2f41; */
-    color: #313340;
-}
-
+/* how to make the warnings go away :( */
 @theme {
     --color-text: #e2e1f9;
     --color-textDim: #60647a;
     --color-background: #252739;
     --color-secondary: #1e202f;
+    --color-dimBackground: #1b1d2b;
     --color-accent: #c0a1f0;
+    --color-accentDim: #503f6b;
     --color-primary: #212334;
     --color-border: #313340;
 
@@ -23,12 +21,29 @@ a {
     */
 }
 
+/* https://tailwindcss.com/docs/adding-custom-styles#adding-base-styles */
+@layer components {
+    .input-base {
+        /* https://tailwindcss.com/docs/functions-and-directives#apply-directive */
+        @apply text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border;
+    }
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+input,
+a,
+select,
+option {
     font-family: 'mono', monospace;
     /* color: var(--color-text); */
+}
+
+#testing {
+    /* color: #2d2f41; */
+    color: #503f6b;
 }

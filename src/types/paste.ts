@@ -6,11 +6,11 @@ export interface PasteFile {
 export interface Paste {
     id: number;
     files: PasteFile[];
-    title: string | null;
-    author: string | null;
+    title?: string;
+    author?: string;
     views: number;
     comments_enabled: boolean;
     created_at: number;
-    expires_at: number | null;
-    forked_from: number | null;
+    expires_at?: number;
+    forked_from?: number;
 }

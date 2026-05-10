@@ -1,8 +1,9 @@
 import './App.css'
 import FileBrowser from './components/FileBrowser';
 import { useEffect, useState } from 'react';
-import TaskBar from './components/TaskBar';
 import type { PasteFile } from './types';
+import ViewingTaskBar from './components/ViewingTaskBar';
+import CreationTaskBar from './components/CreationTaskBar';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/selectionStart
 function keyPressed(k: React.KeyboardEvent<HTMLTextAreaElement>) {
@@ -89,7 +90,17 @@ function App() {
         setContent(e.target.value);
       }} value={content} />
     </div>
-    <TaskBar createMode={true} />
+    <CreationTaskBar paste={{
+      id: 1234,
+      files: [],
+      title: 'huh',
+      author: 'blehhh',
+      views: 200,
+      comments_enabled: false,
+      created_at: 1234,
+      expires_at: 1234,
+      forked_from: 4567,
+    }} />
   </div>
 }
 
