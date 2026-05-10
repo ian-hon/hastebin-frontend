@@ -2,7 +2,6 @@ import './App.css'
 import FileBrowser from './components/FileBrowser';
 import { useEffect, useState } from 'react';
 import type { PasteFile } from './types';
-import ViewingTaskBar from './components/ViewingTaskBar';
 import CreationTaskBar from './components/CreationTaskBar';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/selectionStart
