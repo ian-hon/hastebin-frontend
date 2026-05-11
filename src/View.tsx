@@ -80,7 +80,7 @@ function View() {
         return forkedFiles[activeFile]?.content ?? '';
     }, [forkedFiles, activeFile]);
 
-    return <div className="relative flex overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
+    return <div className="relative flex no-scrollbar overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
         <FileBrowser readOnly={true} files={files} activeFile={activeFile} onChangeFile={changeFile} />
         <div className="overflow-scroll no-scrollbar flex-1 w-full bg-background p-4">
             {diffEnabled ? (

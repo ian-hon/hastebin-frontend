@@ -131,9 +131,9 @@ function App() {
   }
   // #endregion
 
-  return <div className="relative flex overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
+  return <div className="relative flex no-scrollbar overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
     <FileBrowser readOnly={false} files={files} activeFile={activeFile} onChangeFile={changeFile} onDeleteFile={deleteFile} onCreateFile={createNewFile} onRenameFile={renameFile} />
-    <div className="overflow-scroll flex-1 w-full bg-background p-4">
+    <div className="overflow-scroll no-scrollbar flex-1 w-full bg-background p-4">
       <textarea className="w-full h-full text-nowrap text-text text-xl font-mono bg-background outline-none resize-none" autoFocus={true} onKeyDown={keyPressed} spellCheck={false} onChange={(e) => {
         setContent(e.target.value);
       }} value={content} />
