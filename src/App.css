@@ -12,6 +12,18 @@
     --color-primary: #212334;
     --color-border: #313340;
 
+    /* diff colors for forked pastes */
+    --color-diffAdded: #034d1e;
+    --color-diffRemoved: #5a1e1e;
+
+    --color-diffWordAdded: #0a6e31;
+    --color-diffWordRemoved: #8b2e2e;
+
+    --color-diffAddedGutter: #023d17;
+    --color-diffRemovedGutter: #4a1616;
+
+    --color-diffHighlight: #313340;
+
     /*
     primary: #9893E6
     accent: #8F32CF
@@ -60,4 +72,15 @@ span * {
 #testing {
     /* color: #2d2f41; */
     color: #503f6b;
+
+    color: #034d1e;
+    color: #5a1e1e;
+
+    color: #0a6e31;
+    color: #8b2e2e;
+
+    color: #023d17;
+    color: #4a1616;
+
+    color: #313340;
 }

@@ -17,6 +17,7 @@
     "lucide-react": "^1.14.0",
     "qrcode": "^1.5.4",
     "react": "^19.2.5",
+    "react-diff-viewer-continued": "^4.2.2",
     "react-dom": "^19.2.5",
     "react-native-svg": "^15.15.4",
     "react-qr-code": "^2.0.21",

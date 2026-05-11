@@ -9,6 +9,7 @@ import { fromHex } from './lib/utils';
 import { detectLanguage } from './lib/language';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark as highlightTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import ReactDiffViewer from 'react-diff-viewer-continued';
 // import { vscDarkPlus as highlightTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 function View() {
@@ -23,6 +24,8 @@ function View() {
             content: ""
         }
     ]);
+    const [diffEnabled, setDiffEnabled] = useState(false);
+    const [forkedFiles, setForkedFiles] = useState<PasteFile[]>([]);
 
     const language = useMemo(() => {
         const fileName = files[activeFile]?.fileName || 'main';
@@ -42,6 +45,21 @@ function View() {
             setFiles(parsedFiles);
             setContent(parsedFiles[0]?.content ?? '');
             setChecksumPair(paste.checksum_pair);
+
+            // fetch forked files if isnt undefined
+            if (paste.paste.forked_from) {
+                pasteApi.fetchPaste(paste.paste.forked_from).then(forkedPaste => {
+                    let parsedForkedFiles: PasteFile[];
+                    try {
+                        parsedForkedFiles = JSON.parse(forkedPaste.paste.content) as PasteFile[];
+                    } catch {
+                        parsedForkedFiles = [{ fileName: 'main', content: forkedPaste.paste.content }];
+                    }
+                    setForkedFiles(parsedForkedFiles);
+                }).catch(() => {
+                    setForkedFiles([]);
+                });
+            }
         });
     }, [id])
 
@@ -57,27 +75,72 @@ function View() {
     }
     // #endregion
 
+    // get the corresponding one (files[index] and forked_files[index])
+    const oldContent = useMemo(() => {
+        return forkedFiles[activeFile]?.content ?? '';
+    }, [forkedFiles, activeFile]);
+
     return <div className="relative flex overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
         <FileBrowser readOnly={true} files={files} activeFile={activeFile} onChangeFile={changeFile} />
         <div className="overflow-scroll no-scrollbar flex-1 w-full bg-background p-4">
-            <SyntaxHighlighter
-                language={language}
-                style={highlightTheme}
-                customStyle={{
-                    margin: 0,
-                    padding: 0,
-                    fontFamily: 'var(--font-mono)',
-                    background: 'transparent',
-                    height: '100%',
-                    whiteSpace: 'nowrap',
-                }}
-                wrapLongLines={false}
-            >
-                {content}
-            </SyntaxHighlighter>
+            {diffEnabled ? (
+                <ReactDiffViewer
+                    oldValue={oldContent}
+                    newValue={content}
+                    splitView={false}
+                    useDarkTheme={true}
+                    hideLineNumbers={false}
+                    showDiffOnly={false}
+                    styles={{
+                        variables: {
+                            dark: {
+                                diffViewerBackground: 'transparent',
+                                emptyLineBackground: 'transparent',
+
+                                addedBackground: 'var(--color-diffAdded)',
+                                addedColor: 'var(--color-text)',
+                                removedBackground: 'var(--color-diffRemoved)',
+                                removedColor: 'var(--color-text)',
+
+                                wordAddedBackground: 'var(--color-diffWordAdded)',
+                                wordRemovedBackground: 'var(--color-diffWordRemoved)',
+
+                                addedGutterBackground: 'var(--color-diffAddedGutter)',
+                                removedGutterBackground: 'var(--color-diffRemovedGutter)',
+
+                                gutterBackground: 'var(--color-dimBackground)',
+                                gutterBackgroundDark: 'var(--color-dimBackground)',
+
+                                highlightBackground: 'var(--color-diffHighlight)',
+                                highlightGutterBackground: 'var(--color-diffHighlight)',
+                            }
+                        },
+                        line: {
+                            fontFamily: 'var(--font-mono)',
+                            whiteSpace: 'pre',
+                        },
+                    }}
+                />
+            ) : (
+                <SyntaxHighlighter
+                    language={language}
+                    style={highlightTheme}
+                    customStyle={{
+                        margin: 0,
+                        padding: 0,
+                        fontFamily: 'var(--font-mono)',
+                        background: 'transparent',
+                        height: '100%',
+                        whiteSpace: 'nowrap',
+                    }}
+                    wrapLongLines={false}
+                >
+                    {content}
+                </SyntaxHighlighter>
+            )}
         </div>
         {
-            paste && <ViewingTaskBar paste={paste} checksumPair={checksumPair} />
+            paste && <ViewingTaskBar onDiffToggle={() => { setDiffEnabled(e => !e) }} paste={paste} checksumPair={checksumPair} />
         }
     </div>
 }

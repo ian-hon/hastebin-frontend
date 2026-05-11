@@ -7,12 +7,14 @@ import { bufferToHex, createHash, getTimeRemaining, toHex } from '../lib/utils';
 
 export interface ViewingTaskBarProps {
     paste: Paste,
-    checksumPair: ChecksumPair | undefined
+    checksumPair: ChecksumPair | undefined,
+    onDiffToggle: () => void;
 }
 
 const ViewingTaskBar = ({
     paste,
     checksumPair,
+    onDiffToggle,
     ...props
 }: ViewingTaskBarProps) => {
     const navigate = useNavigate();
@@ -88,7 +90,7 @@ const ViewingTaskBar = ({
                         ...(paste.forked_from ? [{
                             text: 'diff',
                             icon: (p: LucideProps) => <FileDiff {...p} />,
-                            onClick: () => { console.log('diffed pressed'); }
+                            onClick: onDiffToggle
                         }] : []),
                         {
                             text: 'guide',
