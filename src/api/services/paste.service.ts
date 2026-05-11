@@ -15,9 +15,14 @@ export interface CreatePasteResponse {
     id: number;
 }
 
+export interface FetchPasteResponse {
+    paste: Paste,
+    checksum_pair: string[]
+}
+
 export const pasteApi = {
-    async fetchPaste(id: number): Promise<Paste> {
-        const response = await apiClient.get<Paste>(`/paste/fetch/${id}`);
+    async fetchPaste(id: number): Promise<FetchPasteResponse> {
+        const response = await apiClient.get<FetchPasteResponse>(`/paste/fetch/${id}`);
         return response.data;
     },
 

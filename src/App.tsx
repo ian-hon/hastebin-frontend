@@ -53,13 +53,13 @@ function App() {
     pasteApi.fetchPaste(fromHex(sourceId)).then(paste => {
       let parsedFiles: PasteFile[];
       try {
-        parsedFiles = JSON.parse(paste.content) as PasteFile[];
+        parsedFiles = JSON.parse(paste.paste.content) as PasteFile[];
       } catch {
-        parsedFiles = [{ fileName: 'main', content: paste.content }];
+        parsedFiles = [{ fileName: 'main', content: paste.paste.content }];
       }
       setFiles(parsedFiles);
       setContent(parsedFiles[0]?.content ?? '');
-      if (forkId) setForkedFrom(paste.id);
+      if (forkId) setForkedFrom(paste.paste.id);
     });
   }, [copyId, forkId]);
 
@@ -83,6 +83,8 @@ function App() {
 
   // #region file-switching
   function changeFile(index: number) {
+    if (index === activeFile) return;
+
     setFiles(f => {
       const newFiles = [...f];
       newFiles[activeFile] = { ...newFiles[activeFile], content };
@@ -127,10 +129,6 @@ function App() {
 
     setFiles(f => f.filter((_, i) => i !== index));
   }
-
-  useEffect(() => {
-    console.log(files);
-  }, [files])
   // #endregion
 
   return <div className="relative flex overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">

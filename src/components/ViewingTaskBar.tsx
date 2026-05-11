@@ -1,16 +1,18 @@
-import { ChevronDown, CircleQuestionMark, Copy, FileDiff, GitFork, Plus } from 'lucide-react';
+import { ChevronDown, CircleQuestionMark, Copy, FileDiff, GitFork, Plus, type LucideProps } from 'lucide-react';
 import CustomQRCode from './CustomQRCode';
-import type { Paste } from '../types';
+import type { ChecksumPair, Paste } from '../types';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { toHex } from '../lib/utils';
+import { bufferToHex, createHash, getTimeRemaining, toHex } from '../lib/utils';
 
 export interface ViewingTaskBarProps {
-    paste: Paste
+    paste: Paste,
+    checksumPair: ChecksumPair | undefined
 }
 
 const ViewingTaskBar = ({
     paste,
+    checksumPair,
     ...props
 }: ViewingTaskBarProps) => {
     const navigate = useNavigate();
@@ -24,6 +26,18 @@ const ViewingTaskBar = ({
     const handleVerifySignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setVerifySignature(e.target.value);
     };
+
+    const [isVerified, setIsVerified] = useState(false);
+
+    useEffect(() => {
+        if (!checksumPair || !verifySignature) return;
+
+        createHash(verifySignature).then((buf) => {
+            return createHash(`${checksumPair[0]}${bufferToHex(buf)}`);
+        }).then((buf) => {
+            setIsVerified(bufferToHex(buf) === checksumPair[1]);
+        });
+    }, [verifySignature, checksumPair]);
     // #endregion
 
     useEffect(() => {
@@ -35,6 +49,8 @@ const ViewingTaskBar = ({
     }, [contentRef]);
 
     const yOffset = isOpened ? 0 : contentHeight;
+
+    const pasteUrl = `${window.location.origin}/${toHex(paste.id)}`;
 
     return <div className="absolute bottom-0 flex items-center justify-center" style={{
         transform: `translateY(${yOffset}px)`,
@@ -56,27 +72,27 @@ const ViewingTaskBar = ({
                     [
                         {
                             text: 'new paste',
-                            icon: (p: any) => <Plus {...p} />,
+                            icon: (p: LucideProps) => <Plus {...p} />,
                             onClick: () => { navigate('/') },
                         },
                         {
                             text: 'copy',
-                            icon: (p: any) => <Copy {...p} />,
+                            icon: (p: LucideProps) => <Copy {...p} />,
                             onClick: () => { navigate(`/?copy=${toHex(paste.id)}`) }
                         },
                         {
                             text: 'fork',
-                            icon: (p: any) => <GitFork {...p} />,
+                            icon: (p: LucideProps) => <GitFork {...p} />,
                             onClick: () => { navigate(`/?fork=${toHex(paste.id)}`) }
                         },
                         ...(paste.forked_from ? [{
                             text: 'diff',
-                            icon: (p: any) => <FileDiff {...p} />,
-                            onClick: () => { }
+                            icon: (p: LucideProps) => <FileDiff {...p} />,
+                            onClick: () => { console.log('diffed pressed'); }
                         }] : []),
                         {
                             text: 'guide',
-                            icon: (p: any) => <CircleQuestionMark {...p} />,
+                            icon: (p: LucideProps) => <CircleQuestionMark {...p} />,
                             onClick: () => { navigate('/guide') }
                         },
                     ].map((i, index) => <div key={index} onClick={i.onClick} className={`
@@ -89,7 +105,7 @@ const ViewingTaskBar = ({
                     </div>)
                 }
             </div>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-row gap-4 justify-between">
                 {/* for paste viewing */}
                 <div className="">
                     <div className="gap-3">
@@ -99,37 +115,41 @@ const ViewingTaskBar = ({
                         </div>
                         <div className="flex flex-row gap-[1ch] items-center">
                             <h3 className="text-text opacity-50 min-w-[11ch]">views</h3>
-                            <h3 className="text-text">200</h3>
+                            <h3 className="text-text">{paste.views}</h3>
                         </div>
                         {
                             paste.expires_at && <div className="flex flex-row gap-[1ch] items-center">
                                 <h3 className="text-text opacity-50 min-w-[11ch]">expires in</h3>
-                                <h3 className="text-text">6 days</h3>
+                                <h3 className="text-text">{getTimeRemaining(paste.expires_at)}</h3>
                             </div>
                         }
                         {
                             paste.forked_from && <div className="flex flex-row gap-[1ch] items-center">
                                 <h3 className="text-text opacity-50 min-w-[11ch]">forked from</h3>
-                                <h3 className="text-text">{paste.forked_from}</h3>
+                                <h3 className="text-text cursor-pointer underline-offset-2 hover:underline" onClick={() => { navigate(`/${toHex(paste.forked_from!)}`) }}>{toHex(paste.forked_from)}</h3>
                             </div>
                         }
                     </div>
-                    <div className="flex flex-row gap-[1ch] items-center mt-4">
-                        <input
-                            placeholder="verify signature"
-                            className="text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border"
-                            value={verifySignature}
-                            onChange={handleVerifySignatureChange}
-                        />
-                        <CircleQuestionMark color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 cursor-pointer" />
-                    </div>
+                    {
+                        checksumPair && <div className="flex flex-row gap-[1ch] items-center mt-4">
+                            <input
+                                placeholder="verify signature"
+                                className={`text-text p-2 py-1 bg-dimBackground rounded-md border-2 ${verifySignature ? (isVerified ? 'border-green-500' : 'border-red-500') : 'border-border'}`}
+                                value={verifySignature}
+                                onChange={handleVerifySignatureChange}
+                            />
+                            <CircleQuestionMark color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 cursor-pointer" />
+                        </div>
+                    }
                 </div>
                 <div className="flex flex-col items-center">
-                    <CustomQRCode value={'lojal;sdfjsfjsjflsfd'} size={128} bgColor='transparent' fgColor='var(--color-text)' gap={1} borderRadius={1} />
-                    <a href="#" className="text-text mt-2 text-sm italic duration-300 opacity-50 hover:opacity-100 transform-gpu">
-                        {/* <h3 className="text-text">{'hastebin.ianhon.com/1234'}</h3> */}
-                        {'hastebin.ianhon.com/1234'}
-                    </a>
+                    <CustomQRCode value={pasteUrl} size={128} bgColor='transparent' fgColor='var(--color-text)' gap={1} borderRadius={1} />
+                    <div className="flex flex-row items-center justify-center mt-2 duration-300 opacity-50 hover:opacity-100 transform-gpu cursor-copy active:opacity-30">
+                        <h3 className="text-text text-sm italic">
+                            {pasteUrl.replace(/^https?:\/\//, '')}
+                        </h3>
+                        <Copy className="ml-2" size={15} color="var(--color-text)" />
+                    </div>
                 </div>
             </div>
         </div>

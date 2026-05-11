@@ -16,3 +16,5 @@ export interface Paste {
     expires_at?: number;
     forked_from?: number;
 }
+
+export type ChecksumPair = string[];

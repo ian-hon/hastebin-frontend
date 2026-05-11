@@ -25,7 +25,7 @@
 @layer components {
     .input-base {
         /* https://tailwindcss.com/docs/functions-and-directives#apply-directive */
-        @apply text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border;
+        @apply text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border outline-none;
     }
 }
 

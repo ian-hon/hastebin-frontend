@@ -1,4 +1,4 @@
-import { CircleQuestionMark, ClipboardPaste, Plus, RefreshCcw } from 'lucide-react';
+import { CircleQuestionMark, ClipboardPaste, Plus, RefreshCcw, type LucideProps } from 'lucide-react';
 import { useState } from 'react';
 import { generatePhrase } from '../lib/bip39';
 import { useNavigate } from 'react-router';
@@ -31,7 +31,7 @@ const CreationTaskBar = ({
     };
 
     const generateRandomSignature = () => {
-        setSignature(generatePhrase(6).join(' '));
+        setSignature(generatePhrase(3).join(' '));
     };
 
     return <div {...props} className="absolute bottom-5 bg-primary drop-shadow-red p-4 rounded-lg z-10 border-2 border-border">
@@ -40,29 +40,24 @@ const CreationTaskBar = ({
                 [
                     {
                         text: 'new paste',
-                        icon: (p: any) => <Plus {...p} />,
+                        icon: (p: LucideProps) => <Plus {...p} />,
                         onClick: () => { navigate('/') },
                     },
                     {
                         text: 'guide',
-                        icon: (p: any) => <CircleQuestionMark {...p} />,
+                        icon: (p: LucideProps) => <CircleQuestionMark {...p} />,
                         onClick: () => { navigate('/guide') }
                     }
                 ].map((i, index) => <div key={index} onClick={i.onClick} className={`
                         flex flex-row gap-2 items-center justify-between cursor-pointer
                         duration-300 opacity-50 hover:opacity-100 transform-gpu
+                        self-start
                         ${index == 0 ? "" : "border-l-2 border-slate-700 pl-4"}`} // https://tailwindcss.com/docs/transform#hardware-acceleration
                 >
                     {i.icon({ size: 20, color: "var(--color-text)" })}
                     <h3 className="text-sm text-text">{i.text}</h3>
                 </div>)
             }
-            <div className="flex-1 flex flex-row justify-end">
-                <div className="input-base flex flex-row self-end w-fit items-center gap-[1ch] bg-accentDim border-accent cursor-pointer" onClick={() => onPaste({ author, expiry, signature })}>
-                    <h3 className="text-accent">paste!</h3>
-                    <ClipboardPaste className="" color="var(--color-accent)" size={16} />
-                </div>
-            </div>
         </div>
         <div className="">
             {/* for paste viewing */}
@@ -93,11 +88,17 @@ const CreationTaskBar = ({
             <div className="flex items-stretch gap-2 mt-2">
                 <input
                     placeholder='signature (optional)'
-                    className="input-base flex-1"
+                    className="input-base flex-1 rounded-r-none"
                     value={signature}
                     onChange={handleSignatureChange}
                 />
-                <RefreshCcw className="input-base cursor-pointer active:opacity-80 select-none" size={40} onClick={generateRandomSignature} />
+                <RefreshCcw className="input-base cursor-pointer active:opacity-80 select-none -ml-3 rounded-l-none" size={40} onClick={generateRandomSignature} />
+                <div className="flex-1 flex flex-row ml-4 justify-end">
+                    <div className="input-base flex flex-row self-end w-fit items-center gap-[1ch] bg-accentDim border-accent cursor-pointer" onClick={() => onPaste({ author, expiry, signature })}>
+                        <h3 className="text-accent">paste!</h3>
+                        <ClipboardPaste className="" color="var(--color-accent)" size={16} />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
