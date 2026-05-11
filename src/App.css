@@ -29,6 +29,11 @@
     }
 }
 
+/* https: //www.reddit.com/r/tailwindcss/comments/1iqephx/comment/mo33acp/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button */
+@utility no-scrollbar {
+    @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 h1,
 h2,
 h3,
@@ -41,6 +46,15 @@ select,
 option {
     font-family: 'mono', monospace;
     /* color: var(--color-text); */
+}
+
+pre,
+pre *,
+code,
+code *,
+span,
+span * {
+    background: none !important;
 }
 
 #testing {
