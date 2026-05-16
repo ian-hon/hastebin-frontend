@@ -6,10 +6,14 @@ import type { ExpiryOption } from '../types';
 
 export interface CreationTaskBarProps {
     onPaste: (options: { author: string; expiry: ExpiryOption; signature: string }) => void;
+    commentsEnabled: boolean;
+    setCommentsEnabled: (enabled: boolean) => void;
 }
 
 const CreationTaskBar = ({
     onPaste,
+    commentsEnabled,
+    setCommentsEnabled,
     ...props
 }: CreationTaskBarProps) => {
     const navigate = useNavigate();
@@ -58,6 +62,18 @@ const CreationTaskBar = ({
                     <h3 className="text-sm text-text">{i.text}</h3>
                 </div>)
             }
+            <div className="flex flex-1 items-end justify-end">
+                <div
+                    onClick={() => setCommentsEnabled(!commentsEnabled)}
+                    className="flex items-center gap-2 cursor-pointer select-none duration-300 opacity-50 transform-gpu hover:opacity-100"
+                >
+                    <div className={`w-4 h-4 border-2 rounded transition-colors ${commentsEnabled
+                        ? 'bg-accent border-accent'
+                        : 'bg-transparent border-text'
+                        }`} />
+                    <span className="text-text text-sm">comments</span>
+                </div>
+            </div>
         </div>
         <div className="">
             {/* for paste viewing */}

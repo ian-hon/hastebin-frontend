@@ -42,6 +42,7 @@ function App() {
   const [forkedFrom, setForkedFrom] = useState<number | undefined>();
 
   const [content, setContent] = useState("");
+  const [commentsEnabled, setCommentsEnabled] = useState(true);
 
   const [activeFile, setActiveFile] = useState(0);
   const [files, setFiles] = useState<PasteFile[]>([{ fileName: "main", content: "" }]);
@@ -73,7 +74,7 @@ function App() {
     const result = await pasteApi.createPaste({
       content: JSON.stringify(updatedFiles),
       author: options.author || undefined,
-      comments_enabled: true,
+      comments_enabled: commentsEnabled,
       checksum_passphrase: options.signature || undefined,
       expires_at: expiryOffset ? Date.now() + expiryOffset : undefined,
       forked_from: forkedFrom,
@@ -138,7 +139,7 @@ function App() {
         setContent(e.target.value);
       }} value={content} />
     </div>
-    <CreationTaskBar onPaste={onPaste} />
+    <CreationTaskBar onPaste={onPaste} commentsEnabled={commentsEnabled} setCommentsEnabled={setCommentsEnabled} />
   </div>
 }
 

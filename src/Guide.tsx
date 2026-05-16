@@ -89,11 +89,21 @@ const Guide = () => {
                             }
                         </div>
                         <div className="flex-1">
-                            {/* <img src={e.mediaURL} /> */}
-                            <img className="rounded-2xl w-full" src={`./src/assets/${e.mediaURL}`} />
+                            <img className="rounded-2xl w-full" src={`/guide/${e.mediaURL}`} />
                         </div>
                     </div>)
                 }
+            </div>
+            <div className="mt-4 flex flex-col gap-1 text-center">
+                <a href="https://ianhon.com" target='_blank' className="text-text text-sm mb-1">ian-hon</a>
+                <div className="flex gap-3 text-xs text-text/50 justify-center">
+                    <a href="https://github.com/ian-hon/hastebin" target="_blank" className='transform-gpu hover:text-text duration-300 cursor-pointer'>api: axum.rs + sqlx</a>
+                    <a>•</a>
+                    <a href="https://github.com/ian-hon/hastebin-frontend" target="_blank" className='transform-gpu hover:text-text duration-300 cursor-pointer'>frontend: react + tailwind + vite</a>
+                </div>
+                <a href="mailto:dev@ianhon.com" className="text-xs text-accent/60 hover:text-accent transition-colors mt-2">
+                    say hi! or request a feature
+                </a>
             </div>
         </div>
     );
