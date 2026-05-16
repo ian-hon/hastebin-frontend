@@ -3,7 +3,7 @@ import FileBrowser from './components/FileBrowser';
 import { useEffect, useState, useMemo, useRef, memo, useCallback } from 'react';
 import type { ChecksumPair, Comment, Paste, PasteFile } from './types';
 import ViewingTaskBar from './components/ViewingTaskBar';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { pasteApi } from './api/services/paste.service';
 import { fromHex } from './lib/utils/format';
 import { detectLanguage } from './lib/language';
@@ -160,6 +160,7 @@ const CommentForm = memo(({
 });
 
 function View() {
+    const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
     const [paste, setPaste] = useState<Paste | undefined>();
     const [checksumPair, setChecksumPair] = useState<ChecksumPair | undefined>(undefined);
@@ -251,6 +252,9 @@ function View() {
             }
 
             commentApi.fetchCommentsByPaste(paste.paste.id).then(setComments);
+        }).catch((e) => {
+            console.log(e);
+            navigate(`/`);
         });
     }, [id])
 
