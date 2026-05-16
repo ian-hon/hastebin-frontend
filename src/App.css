@@ -46,6 +46,12 @@
     @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
 }
 
+html,
+body,
+head {
+    background-color: var(--color-background);
+}
+
 h1,
 h2,
 h3,

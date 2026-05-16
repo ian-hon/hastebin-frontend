@@ -1,6 +1,6 @@
 {
     "short_name": "hastebin",
-    "name": "hastebin : the fast pastebin",
+    "name": "multi-file, clutterless commentable pastebin. forking + diffing, and paste signing. made in Rust.",
     "icons": [
         {
             "src": "favicon.ico",
