@@ -5,7 +5,7 @@ import type { ExpiryOption, PasteFile } from './types';
 import CreationTaskBar from './components/CreationTaskBar';
 import { useSearchParams, useNavigate } from 'react-router';
 import { pasteApi } from './api/services/paste.service';
-import { fromHex, toHex } from './lib/utils';
+import { fromHex, toHex } from './lib/utils/format';
 
 const EXPIRY_MS: Record<ExpiryOption, number | undefined> = {
   none: undefined,

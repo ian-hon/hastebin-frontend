@@ -5,6 +5,7 @@ export interface CreateCommentRequest {
     paste_id: number;
     content: string;
     author?: string;
+    page_index: number;
     from_row: number;
     from_column: number;
     to_row: number;

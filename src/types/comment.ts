@@ -4,6 +4,7 @@ export interface Comment {
     content: string;
     author: string | null;
     created_at: number;
+    page_index: number;
     from_row: number;
     from_column: number;
     to_row: number;

@@ -3,7 +3,7 @@ import CustomQRCode from './CustomQRCode';
 import type { ChecksumPair, Paste } from '../types';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { bufferToHex, createHash, getTimeRemaining, toHex } from '../lib/utils';
+import { bufferToHex, createHash, getTimeRemaining, toHex } from '../lib/utils/format';
 
 export interface ViewingTaskBarProps {
     paste: Paste,
