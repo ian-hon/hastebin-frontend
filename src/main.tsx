@@ -4,10 +4,12 @@ import './index.css'
 import App from './App.tsx'
 import View from './View.tsx';
 import Guide from './Guide.tsx';
+import { Analytics } from '@vercel/analytics/react';
 
 // https://reactrouter.com/start/modes#declarative
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
+    <Analytics></Analytics>
     <Routes>
       {/* https://reactrouter.com/start/declarative/routing#configuring-routes */}
       <Route index element={<App />} /> {/* another route with 'copy' and 'fork' query params  */}
