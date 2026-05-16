@@ -146,7 +146,9 @@ const ViewingTaskBar = ({
                 </div>
                 <div className="flex flex-col items-center">
                     <CustomQRCode value={pasteUrl} size={128} bgColor='transparent' fgColor='var(--color-text)' gap={1} borderRadius={1} />
-                    <div className="flex flex-row items-center justify-center mt-2 duration-300 opacity-50 hover:opacity-100 transform-gpu cursor-copy active:opacity-30">
+                    <div className="flex flex-row items-center justify-center mt-2 duration-300 opacity-50 hover:opacity-100 transform-gpu cursor-copy active:opacity-30" onClick={() => {
+                        navigator.clipboard.writeText(window.location.href);
+                    }}>
                         <h3 className="text-text text-sm italic">
                             {pasteUrl.replace(/^https?:\/\//, '')}
                         </h3>
