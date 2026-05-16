@@ -1,11 +1,17 @@
 const COMMENT_QUALITY = 50;
 
-export function measureFontMetrics(codeContainerRef: React.RefObject<HTMLDivElement | null>, content: string, setFontMetrics: React.Dispatch<React.SetStateAction<{
-    lineHeight: number;
-    charWidth: number;
-    baseOffsetX: number;
-    baseOffsetY: number;
-}>>) {
+export function measureFontMetrics(
+    codeContainerRef: React.RefObject<HTMLDivElement | null>,
+    content: string,
+    setFontMetrics: React.Dispatch<React.SetStateAction<{
+        lineHeight: number;
+        charWidth: number;
+        baseOffsetX: number;
+        baseOffsetY: number;
+    }>>
+) {
+    console.log('measuring');
+
     const codeElement = codeContainerRef.current?.querySelector('code, pre');
     if (!codeElement) return;
 
