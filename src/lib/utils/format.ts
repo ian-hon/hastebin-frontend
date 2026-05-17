@@ -19,7 +19,7 @@ export function bufferToHex(buffer: ArrayBuffer): string {
 }
 
 export function getTimeRemaining(expiry: number): string {
-    const length = Math.floor(expiry - (new Date().getTime())) / 1000;
+    const length = expiry - Math.floor(Date.now() / 1000);
 
     if (length < 0) {
         return 'expired';

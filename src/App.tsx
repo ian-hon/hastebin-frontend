@@ -7,15 +7,15 @@ import { useSearchParams, useNavigate } from 'react-router';
 import { pasteApi } from './api/services/paste.service';
 import { fromHex, toHex } from './lib/utils/format';
 
-const EXPIRY_MS: Record<ExpiryOption, number | undefined> = {
+const EXPIRY_SECONDS: Record<ExpiryOption, number | undefined> = {
   none: undefined,
-  '1_hour': 3600 * 1000,
-  '6_hour': 6 * 3600 * 1000,
-  '12_hour': 12 * 3600 * 1000,
-  '1_day': 24 * 3600 * 1000,
-  '3_day': 3 * 24 * 3600 * 1000,
-  '7_day': 7 * 24 * 3600 * 1000,
-  '30_day': 30 * 24 * 3600 * 1000,
+  '1_hour': 3600,
+  '6_hour': 6 * 3600,
+  '12_hour': 12 * 3600,
+  '1_day': 24 * 3600,
+  '3_day': 3 * 24 * 3600,
+  '7_day': 7 * 24 * 3600,
+  '30_day': 30 * 24 * 3600,
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/selectionStart
@@ -70,13 +70,13 @@ function App() {
     const updatedFiles = files.map((f, i) =>
       i === activeFile ? { ...f, content } : f
     );
-    const expiryOffset = EXPIRY_MS[options.expiry];
+    const expiryOffset = EXPIRY_SECONDS[options.expiry];
     const result = await pasteApi.createPaste({
       content: JSON.stringify(updatedFiles),
       author: options.author || undefined,
       comments_enabled: commentsEnabled,
       checksum_passphrase: options.signature || undefined,
-      expires_at: expiryOffset ? Date.now() + expiryOffset : undefined,
+      expires_at: expiryOffset ? Math.floor(Date.now() / 1000) + expiryOffset : undefined,
       forked_from: forkedFrom,
     });
     navigate(`/${toHex(result.id)}`);
