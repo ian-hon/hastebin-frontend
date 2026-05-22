@@ -66,7 +66,9 @@ const ViewingTaskBar = ({
         group
         " onClick={() => { setOpened(t => !t) }}>
             {/* https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state */}
-            <ChevronDown color="var(--color-text)" className="duration-300 transform-gpu opacity-50 cursor-pointer group-hover:opacity-100" />
+            <ChevronDown color="var(--color-text)" className="duration-300 transform-gpu opacity-50 cursor-pointer group-hover:opacity-100" style={{
+                transform: `rotate(${isOpened ? 0 : 180}deg)`
+            }} />
         </div>
         <div ref={contentRef} {...props} className="bg-primary mb-5 drop-shadow-red p-4 rounded-lg z-10 border-2 border-border">
             <div className="flex-row flex gap-4 mb-4">
@@ -140,7 +142,7 @@ const ViewingTaskBar = ({
                                 value={verifySignature}
                                 onChange={handleVerifySignatureChange}
                             />
-                            <CircleQuestionMark color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 cursor-pointer" />
+                            <CircleQuestionMark onClick={() => { navigate('/guide') }} color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 cursor-pointer" />
                         </div>
                     }
                 </div>

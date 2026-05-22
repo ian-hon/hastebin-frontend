@@ -164,7 +164,7 @@ function View() {
     const { id } = useParams<{ id: string }>();
     const [paste, setPaste] = useState<Paste | undefined>();
     const [checksumPair, setChecksumPair] = useState<ChecksumPair | undefined>(undefined);
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState("fetching paste, wait a moment...");
     const [activeFile, setActiveFile] = useState(0);
     const [files, setFiles] = useState<PasteFile[]>([
         {
