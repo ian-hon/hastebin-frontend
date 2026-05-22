@@ -13,6 +13,7 @@ import ReactDiffViewer from 'react-diff-viewer-continued';
 import { commentApi } from './api';
 import { measureFontMetrics } from './lib/utils/fontMetrics';
 import { processSelectedText } from './lib/utils/selectText';
+import MeasuringBlock from './components/MeasuringBlock';
 
 const CommentHighlight = memo(({
     comment,
@@ -109,7 +110,7 @@ const CommentForm = memo(({
 
     return (
         <div
-            className="absolute pointer-events-auto z-50"
+            className="fixed pointer-events-auto z-50"
             style={{
                 top: `${selectedText.y}px`,
                 left: `${selectedText.x}px`,
@@ -117,6 +118,7 @@ const CommentForm = memo(({
             }}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseUp={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
         >
             <div className="bg-primary rounded-lg drop-shadow-red border-2 border-border p-4 w-80">
@@ -190,6 +192,11 @@ function View() {
         y: number;
     } | null>(null);
     const [showCommentForm, setShowCommentForm] = useState(false);
+    const showCommentFormRef = useRef(false);
+    const setShowCommentFormWithRef = (value: boolean) => {
+        showCommentFormRef.current = value;
+        setShowCommentForm(value);
+    };
     const [hoveredComment, setHoveredComment] = useState<number | null>(null);
     const [fontMetrics, setFontMetrics] = useState<{ lineHeight: number; charWidth: number; baseOffsetX: number; baseOffsetY: number }>({
         // some default fallback values
@@ -199,6 +206,11 @@ function View() {
         baseOffsetY: 16
     });
     const codeContainerRef = useRef<HTMLDivElement>(null);
+
+    // the text selection algo would be different
+    const isMobile = useMemo(() => {
+        return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }, []);
 
     const language = useMemo(() => {
         const fileName = files[activeFile]?.fileName || 'main';
@@ -215,7 +227,7 @@ function View() {
         if (!codeContainerRef.current || !content) return;
         // TODO: call this on window resize too
         const timer = setTimeout(() => {
-            measureFontMetrics(codeContainerRef, content, setFontMetrics)
+            measureFontMetrics(codeContainerRef, setFontMetrics)
         }, 100);
         return () => clearTimeout(timer);
     }, [content, activeFile]);
@@ -258,16 +270,22 @@ function View() {
         });
     }, [id])
 
-    const handleTextSelection = (e: React.MouseEvent) => {
-        const selection = window.getSelection();
-        const selectionLength = selection?.toString().trim().length ?? 0;
-        console.log('selection', selection);
-        if (showCommentForm || !selection || selection.isCollapsed || !paste?.comments_enabled || (selectionLength <= 0)) {
-            setSelectedText(null);
-            return;
-        }
+    const handleTextSelection = () => {
+        setTimeout(() => {
+            if (showCommentFormRef.current) return;
 
-        processSelectedText(codeContainerRef, content, e.currentTarget as HTMLElement, selection, selectionLength, setSelectedText);
+            const selection = window.getSelection();
+            const selectionLength = selection?.toString().trim().length ?? 0;
+
+            if (showCommentForm || !selection || selection.isCollapsed || !paste?.comments_enabled || selectionLength <= 0) {
+                setSelectedText(null);
+                return;
+            }
+
+            if (!codeContainerRef.current) return;
+
+            processSelectedText(codeContainerRef, content, codeContainerRef.current, selection, selectionLength, setSelectedText);
+        }, 100);
     };
 
     const changeFile = (index: number) => {
@@ -325,7 +343,7 @@ function View() {
             });
 
             setComments(await commentApi.fetchCommentsByPaste(paste.id));
-            setShowCommentForm(false);
+            setShowCommentFormWithRef(false);
             setSelectedText(null);
             window.getSelection()?.removeAllRanges();
         } catch {
@@ -334,7 +352,7 @@ function View() {
     }, [selectedText, paste, activeFile]);
 
     const cancelCommentCreation = useCallback(() => {
-        setShowCommentForm(false);
+        setShowCommentFormWithRef(false);
         setSelectedText(null);
         window.getSelection()?.removeAllRanges();
     }, []);
@@ -350,7 +368,7 @@ function View() {
 
     return <div className="relative flex no-scrollbar overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
         <FileBrowser readOnly={true} files={files} activeFile={activeFile} onChangeFile={changeFile} />
-        <div className="overflow-scroll no-scrollbar flex-1 w-full bg-background p-4 relative" onMouseUp={handleTextSelection}>
+        <div className="overflow-scroll no-scrollbar flex-1 w-full bg-background p-4 relative" onMouseUp={handleTextSelection} onTouchEnd={handleTextSelection}>
             {diffEnabled ? (
                 <ReactDiffViewer
                     oldValue={oldContent}
@@ -392,6 +410,7 @@ function View() {
             ) : (
                 <>
                     <div className="relative overflow-scroll no-scrollbar" ref={codeContainerRef}>
+                        <MeasuringBlock />
                         <SyntaxHighlighter
                             language={language}
                             style={highlightTheme}
@@ -423,17 +442,22 @@ function View() {
 
                         {selectedText && paste?.comments_enabled && !showCommentForm && (
                             <div
-                                className="absolute pointer-events-auto z-50"
+                                className="fixed pointer-events-auto z-50"
                                 style={{
                                     top: `${selectedText.y}px`,
                                     left: `${selectedText.x}px`,
-                                    transform: 'translate(-50%, calc(-100% - 8px))',
+                                    // for mobile (iOS specifically), we render the button underneath the selection
+                                    // or else the default selection tooltip gets in the way
+                                    transform: isMobile
+                                        ? 'translate(-50%, calc(100% + 8px))'
+                                        : 'translate(-50%, calc(-100% - 8px))',
                                 }}
                                 onMouseDown={(e) => e.stopPropagation()}
+                                onTouchEnd={(e) => e.stopPropagation()}
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <button
-                                    onClick={() => setShowCommentForm(true)}
+                                    onClick={() => setShowCommentFormWithRef(true)}
                                     className="bg-accentDim border-2 border-border text-accent text-sm font-medium py-2 px-4 rounded drop-shadow-red transition-colors duration-300 opacity-100 hover:opacity-80 whitespace-nowrap cursor-pointer"
                                 >
                                     Create Comment

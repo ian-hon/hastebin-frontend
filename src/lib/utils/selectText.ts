@@ -13,7 +13,7 @@ export function processSelectedText(
         y: number;
     } | null>>
 ) {
-    console.log('processing');
+    if (selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
     const codeContainer = e.querySelector('code, pre');
@@ -46,15 +46,15 @@ export function processSelectedText(
     const start = calcPosition(charsBeforeSelection);
     const end = calcPosition(charsBeforeSelection + selectionLength);
     const rect = range.getBoundingClientRect();
-    const containerRect = codeContainerRef.current?.getBoundingClientRect();
-    if (!containerRect) return;
 
-    setSelectedText({
+    const result = {
         fromRow: start.row,
         fromColumn: start.column,
         toRow: end.row,
         toColumn: end.column,
-        x: rect.left - containerRect.left + rect.width / 2,
-        y: rect.top - containerRect.top,
-    });
+        x: rect.left + rect.width / 2,
+        y: rect.top,
+    };
+
+    setSelectedText(result);
 }
