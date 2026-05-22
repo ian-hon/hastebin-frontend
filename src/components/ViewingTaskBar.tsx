@@ -54,7 +54,7 @@ const ViewingTaskBar = ({
 
     const pasteUrl = `${window.location.origin}/${toHex(paste.id)}`;
 
-    return <div className="absolute bottom-0 flex items-center justify-center" style={{
+    return <div className="absolute bottom-0 flex items-center justify-center w-full px-2 sm:px-0 sm:w-auto" style={{
         transform: `translateY(${yOffset}px)`,
         transition: 'transform 0.3s ease-in-out'
     }}>
@@ -70,8 +70,8 @@ const ViewingTaskBar = ({
                 transform: `rotate(${isOpened ? 0 : 180}deg)`
             }} />
         </div>
-        <div ref={contentRef} {...props} className="bg-primary mb-5 drop-shadow-red p-4 rounded-lg z-10 border-2 border-border">
-            <div className="flex-row flex gap-4 mb-4">
+        <div ref={contentRef} {...props} className="bg-primary mb-5 drop-shadow-red p-3 sm:p-4 rounded-lg z-10 border-2 border-border w-full sm:w-auto max-w-full">
+            <div className="flex flex-wrap gap-3 sm:gap-4 mb-4">
                 {
                     [
                         {
@@ -101,36 +101,36 @@ const ViewingTaskBar = ({
                         },
                     ].map((i, index) => <div key={index} onClick={i.onClick} className={`
                         flex flex-row gap-2 items-center justify-between cursor-pointer
-                        duration-300 opacity-50 hover:opacity-100 transform-gpu
-                        ${index == 0 ? "" : "border-l-2 border-slate-700 pl-4"}`} // https://tailwindcss.com/docs/transform#hardware-acceleration
+                        duration-300 opacity-50 hover:opacity-100 active:opacity-100 transform-gpu
+                        ${index == 0 ? "" : "sm:border-l-2 border-slate-700 sm:pl-4"}`} // https://tailwindcss.com/docs/transform#hardware-acceleration
                     >
                         {i.icon({ size: 20, color: "var(--color-text)" })}
-                        <h3 className="text-sm text-text">{i.text}</h3>
+                        <h3 className="text-sm text-text whitespace-nowrap">{i.text}</h3>
                     </div>)
                 }
             </div>
-            <div className="flex flex-row gap-4 justify-between">
+            <div className="flex flex-col md:flex-row gap-4 justify-between">
                 {/* for paste viewing */}
-                <div className="">
+                <div className="flex-1">
                     <div className="gap-3">
                         <div className="flex flex-row gap-[1ch] items-center">
-                            <h3 className="text-text opacity-50 min-w-[11ch]">author</h3>
-                            <h3 className={paste.author ? 'text-text' : 'text-textDim'}>{paste.author ?? 'anonymous'}</h3>
+                            <h3 className="text-text text-sm opacity-50 min-w-[11ch]">author</h3>
+                            <h3 className={`text-sm ${paste.author ? 'text-text' : 'text-textDim'} truncate`}>{paste.author ?? 'anonymous'}</h3>
                         </div>
                         <div className="flex flex-row gap-[1ch] items-center">
-                            <h3 className="text-text opacity-50 min-w-[11ch]">views</h3>
-                            <h3 className="text-text">{paste.views}</h3>
+                            <h3 className="text-text text-sm opacity-50 min-w-[11ch]">views</h3>
+                            <h3 className="text-text text-sm">{paste.views}</h3>
                         </div>
                         {
                             paste.expires_at && <div className="flex flex-row gap-[1ch] items-center">
-                                <h3 className="text-text opacity-50 min-w-[11ch]">expires in</h3>
-                                <h3 className="text-text">{getTimeRemaining(paste.expires_at)}</h3>
+                                <h3 className="text-text text-sm opacity-50 min-w-[11ch]">expires in</h3>
+                                <h3 className="text-text text-sm">{getTimeRemaining(paste.expires_at)}</h3>
                             </div>
                         }
                         {
                             paste.forked_from && <div className="flex flex-row gap-[1ch] items-center">
-                                <h3 className="text-text opacity-50 min-w-[11ch]">forked from</h3>
-                                <h3 className="text-text cursor-pointer underline-offset-2 hover:underline" onClick={() => { navigate(`/${toHex(paste.forked_from!)}`) }}>{toHex(paste.forked_from)}</h3>
+                                <h3 className="text-text text-sm opacity-50 min-w-[11ch]">forked from</h3>
+                                <h3 className="text-text text-sm cursor-pointer underline-offset-2 hover:underline truncate" onClick={() => { navigate(`/${toHex(paste.forked_from!)}`) }}>{toHex(paste.forked_from)}</h3>
                             </div>
                         }
                     </div>
@@ -138,23 +138,23 @@ const ViewingTaskBar = ({
                         checksumPair && <div className="flex flex-row gap-[1ch] items-center mt-4">
                             <input
                                 placeholder="verify signature"
-                                className={`text-text p-2 py-1 bg-dimBackground rounded-md border-2 ${verifySignature ? (isVerified ? 'border-green-500' : 'border-red-500') : 'border-border'}`}
+                                className={`text-text text-sm p-2 py-1 bg-dimBackground rounded-md border-2 flex-1 min-w-0 ${verifySignature ? (isVerified ? 'border-green-500' : 'border-red-500') : 'border-border'}`}
                                 value={verifySignature}
                                 onChange={handleVerifySignatureChange}
                             />
-                            <CircleQuestionMark onClick={() => { navigate('/guide') }} color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 cursor-pointer" />
+                            <CircleQuestionMark onClick={() => { navigate('/guide') }} color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 active:opacity-100 cursor-pointer flex-shrink-0" />
                         </div>
                     }
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center shrink-0">
                     <CustomQRCode value={pasteUrl} size={128} bgColor='transparent' fgColor='var(--color-text)' gap={1} borderRadius={1} />
-                    <div className="flex flex-row items-center justify-center mt-2 duration-300 opacity-50 hover:opacity-100 transform-gpu cursor-copy active:opacity-30" onClick={() => {
+                    <div className="flex flex-row items-center justify-center mt-2 duration-300 opacity-50 hover:opacity-100 active:opacity-100 transform-gpu cursor-copy active:opacity-30 max-w-full" onClick={() => {
                         navigator.clipboard.writeText(window.location.href);
                     }}>
-                        <h3 className="text-text text-sm italic">
+                        <h3 className="text-text text-xs sm:text-sm italic truncate">
                             {pasteUrl.replace(/^https?:\/\//, '')}
                         </h3>
-                        <Copy className="ml-2" size={15} color="var(--color-text)" />
+                        <Copy className="ml-2 shrink-0" size={15} color="var(--color-text)" />
                     </div>
                 </div>
             </div>

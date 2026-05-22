@@ -76,11 +76,11 @@ const CommentHighlight = memo(({
                         transform: 'translateY(-100%)',
                     }}
                 >
-                    <div className="bg-primary text-text rounded-lg drop-shadow-red p-3 border-2 border-border min-w-64 max-w-md">
+                    <div className="bg-primary text-text rounded-lg drop-shadow-red p-2 sm:p-3 border-2 border-border min-w-48 sm:min-w-64 max-w-[90vw] sm:max-w-md">
                         <div className="text-xs text-textDim mb-1">
                             {comment.author ?? 'anonymous'} • {new Date(comment.created_at * 1000).toLocaleString()}
                         </div>
-                        <div className="text-sm whitespace-pre-wrap wrap-break-word">
+                        <div className="text-xs sm:text-sm whitespace-pre-wrap break-words">
                             {comment.content}
                         </div>
                     </div>
@@ -110,7 +110,7 @@ const CommentForm = memo(({
 
     return (
         <div
-            className="fixed pointer-events-auto z-50"
+            className="fixed pointer-events-auto z-50 px-2 max-w-full"
             style={{
                 top: `${selectedText.y}px`,
                 left: `${selectedText.x}px`,
@@ -121,14 +121,14 @@ const CommentForm = memo(({
             onTouchEnd={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
         >
-            <div className="bg-primary rounded-lg drop-shadow-red border-2 border-border p-4 w-80">
+            <div className="bg-primary rounded-lg drop-shadow-red border-2 border-border p-3 sm:p-4 w-[90vw] max-w-sm sm:max-w-md">
                 <div className="mb-3">
                     <input
                         type="text"
                         value={commentAuthor}
                         onChange={(e) => setCommentAuthor(e.target.value)}
                         placeholder="author (optional)"
-                        className="w-full text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border focus:outline-none focus:border-accent"
+                        className="w-full text-sm sm:text-base text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border focus:outline-none focus:border-accent"
                     />
                 </div>
                 <div className="mb-3">
@@ -137,21 +137,21 @@ const CommentForm = memo(({
                         onChange={(e) => setCommentContent(e.target.value)}
                         placeholder="comment text"
                         rows={3}
-                        className="w-full text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border focus:outline-none focus:border-accent resize-none"
+                        className="w-full text-sm sm:text-base text-text p-2 py-1 bg-dimBackground rounded-md border-2 border-border focus:outline-none focus:border-accent resize-none"
                         autoFocus
                     />
                 </div>
                 <div className="flex justify-end gap-2">
                     <button
                         onClick={onCancel}
-                        className="px-3 py-1.5 text-sm bg-dimBackground border-2 border-border text-text rounded duration-300 opacity-50 hover:opacity-100 transition-opacity"
+                        className="px-3 py-1.5 text-sm bg-dimBackground border-2 border-border text-text rounded duration-300 opacity-50 hover:opacity-100 active:opacity-100 transition-opacity"
                     >
                         cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         disabled={!commentContent.trim()}
-                        className="px-3 py-1.5 text-sm bg-accentDim border-2 border-accent text-accent rounded duration-300 hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+                        className="px-3 py-1.5 text-sm bg-accentDim border-2 border-accent text-accent rounded duration-300 hover:opacity-80 active:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
                     >
                         add
                     </button>
@@ -284,7 +284,7 @@ function View() {
 
             if (!codeContainerRef.current) return;
 
-            processSelectedText(codeContainerRef, content, codeContainerRef.current, selection, selectionLength, setSelectedText);
+            processSelectedText(content, codeContainerRef.current, selection, selectionLength, setSelectedText);
         }, 100);
     };
 
@@ -318,7 +318,7 @@ function View() {
                     return;
                 }
 
-                processSelectedText(codeContainerRef, content, codeContainerRef.current, selection, selectionLength, setSelectedText);
+                processSelectedText(content, codeContainerRef.current, selection, selectionLength, setSelectedText);
                 setShowCommentForm(true);
             }
         };
@@ -366,7 +366,7 @@ function View() {
     }, []);
     // #endregion
 
-    return <div className="relative flex no-scrollbar overflow-hidden m-0 p-0 w-full h-screen max-h-screen flex-col justify-center items-center bg-background">
+    return <div className="relative flex no-scrollbar overflow-hidden m-0 p-0 w-full h-full flex-col justify-center items-center bg-background">
         <FileBrowser readOnly={true} files={files} activeFile={activeFile} onChangeFile={changeFile} />
         <div className="overflow-scroll no-scrollbar flex-1 w-full bg-background p-4 relative" onMouseUp={handleTextSelection} onTouchEnd={handleTextSelection}>
             {diffEnabled ? (
@@ -442,7 +442,7 @@ function View() {
 
                         {selectedText && paste?.comments_enabled && !showCommentForm && (
                             <div
-                                className="fixed pointer-events-auto z-50"
+                                className="fixed pointer-events-auto z-50 px-2"
                                 style={{
                                     top: `${selectedText.y}px`,
                                     left: `${selectedText.x}px`,
@@ -458,7 +458,7 @@ function View() {
                             >
                                 <button
                                     onClick={() => setShowCommentFormWithRef(true)}
-                                    className="bg-accentDim border-2 border-border text-accent text-sm font-medium py-2 px-4 rounded drop-shadow-red transition-colors duration-300 opacity-100 hover:opacity-80 whitespace-nowrap cursor-pointer"
+                                    className="bg-accentDim border-2 border-border text-accent text-xs sm:text-sm font-medium py-2 px-3 sm:px-4 rounded drop-shadow-red transition-colors duration-300 opacity-100 hover:opacity-80 active:opacity-80 whitespace-nowrap cursor-pointer"
                                 >
                                     Create Comment
                                 </button>

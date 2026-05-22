@@ -1,5 +1,4 @@
 export function processSelectedText(
-    codeContainerRef: React.RefObject<HTMLDivElement | null>,
     content: string,
     e: HTMLElement,
     selection: Selection,
