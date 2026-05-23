@@ -26,6 +26,11 @@ export const pasteApi = {
         return response.data;
     },
 
+    async fetchPasteRaw(id: number): Promise<string> {
+        const response = await apiClient.get<string>(`/paste/fetch/${id}`);
+        return response.data;
+    },
+
     // WHY DOES AXIOS DOCS NOT HAVE A SEARCH BAR???
     // https://axios.rest/pages/advanced/request-method-aliases.html#request-aliases
     // https://deadsimplechat.com/blog/axios-get-and-post-examples/

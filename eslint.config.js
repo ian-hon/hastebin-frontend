@@ -31,4 +31,12 @@ export default defineConfig([
       },
     },
   },
+  {
+    // for API directory
+    files: ['api/**/*.ts'],
+    languageOptions: {
+      // TODO: look into what these are
+      globals: { ...globals.browser, ...globals.node },
+    },
+  },
 ])
