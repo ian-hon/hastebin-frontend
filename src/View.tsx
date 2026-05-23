@@ -11,7 +11,6 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark as highlightTheme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import ReactDiffViewer from 'react-diff-viewer-continued';
 import { commentApi } from './api';
-import { measureFontMetrics } from './lib/utils/fontMetrics';
 import { processSelectedText } from './lib/utils/selectText';
 import MeasuringBlock from './components/MeasuringBlock';
 
@@ -221,17 +220,6 @@ function View() {
         return comments.filter(comment => comment.page_index === activeFile);
     }, [comments, activeFile]);
 
-    // measure font metrics
-    useEffect(() => {
-        console.log('font metrics measured');
-        if (!codeContainerRef.current || !content) return;
-        // TODO: call this on window resize too
-        const timer = setTimeout(() => {
-            measureFontMetrics(codeContainerRef, setFontMetrics)
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [content, activeFile]);
-
     // call api
     useEffect(() => {
         if (!id) return;
@@ -410,7 +398,7 @@ function View() {
             ) : (
                 <>
                     <div className="relative overflow-scroll no-scrollbar" ref={codeContainerRef}>
-                        <MeasuringBlock />
+                        <MeasuringBlock codeContainerRef={codeContainerRef} setFontMetrics={setFontMetrics} />
                         <SyntaxHighlighter
                             language={language}
                             style={highlightTheme}
