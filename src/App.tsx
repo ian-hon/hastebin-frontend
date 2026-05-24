@@ -6,6 +6,7 @@ import CreationTaskBar from './components/CreationTaskBar';
 import { useSearchParams, useNavigate } from 'react-router';
 import { pasteApi } from './api/services/paste.service';
 import { fromHex, toHex } from './lib/utils/format';
+import { ALGO_NAME, encrypt } from './lib/utils/crypto';
 
 const EXPIRY_SECONDS: Record<ExpiryOption, number | undefined> = {
   none: undefined,
@@ -64,18 +65,31 @@ function App() {
     });
   }, [copyId, forkId]);
 
-  const onPaste = async (options: { author: string; expiry: ExpiryOption; signature: string }) => {
+  const onPaste = async (options: { author: string; expiry: ExpiryOption; password: string }) => {
     // cos the current file might not have the current content
     // if we set the hook, it will not update immediately, so just recreate the list here
     const updatedFiles = files.map((f, i) =>
       i === activeFile ? { ...f, content } : f
     );
+
+    // if password is non-null, encrypt the paste contents
+    // else just continue
+    let filesToSend = { ...updatedFiles };
+    if (options.password) {
+      filesToSend = await Promise.all(
+        updatedFiles.map(async (file) => ({
+          fileName: file.fileName,
+          content: await encrypt(file.content, options.password),
+          algo: ALGO_NAME
+        }))
+      );
+    }
+
     const expiryOffset = EXPIRY_SECONDS[options.expiry];
     const result = await pasteApi.createPaste({
-      content: JSON.stringify(updatedFiles),
+      content: JSON.stringify(filesToSend),
       author: options.author || undefined,
       comments_enabled: commentsEnabled,
-      checksum_passphrase: options.signature || undefined,
       expires_at: expiryOffset ? Math.floor(Date.now() / 1000) + expiryOffset : undefined,
       forked_from: forkedFrom,
     });

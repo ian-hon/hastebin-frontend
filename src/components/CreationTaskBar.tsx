@@ -1,11 +1,11 @@
 import { CircleQuestionMark, ClipboardPaste, Plus, RefreshCcw, type LucideProps } from 'lucide-react';
 import { useState } from 'react';
-import { generatePhrase } from '../lib/bip39';
 import { useNavigate } from 'react-router';
 import type { ExpiryOption } from '../types';
+import { generatePhrase } from '../lib/bip39';
 
 export interface CreationTaskBarProps {
-    onPaste: (options: { author: string; expiry: ExpiryOption; signature: string }) => void;
+    onPaste: (options: { author: string; expiry: ExpiryOption; password: string }) => void;
     commentsEnabled: boolean;
     setCommentsEnabled: (enabled: boolean) => void;
 }
@@ -20,7 +20,7 @@ const CreationTaskBar = ({
 
     const [author, setAuthor] = useState<string>('');
     const [expiry, setExpiry] = useState<ExpiryOption>('none');
-    const [signature, setSignature] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
     const handleAuthorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setAuthor(e.target.value);
@@ -30,13 +30,13 @@ const CreationTaskBar = ({
         setExpiry(e.target.value as ExpiryOption);
     };
 
-    const handleSignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSignature(e.target.value);
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
     };
 
     const generateRandomSignature = () => {
-        setSignature(generatePhrase(3).join(' '));
-    };
+        setPassword(generatePhrase(3).join(' '));
+    }
 
     return <div {...props} className="absolute bottom-5 left-2 right-2 sm:left-auto sm:right-auto bg-primary drop-shadow-red p-3 sm:p-4 rounded-lg z-10 border-2 border-border max-w-full sm:max-w-none">
         <div className="flex flex-wrap gap-3 sm:gap-4 mb-4 items-center">
@@ -102,17 +102,15 @@ const CreationTaskBar = ({
                 </select>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch gap-2 mt-2">
-                <div className="flex items-stretch gap-2 flex-1">
-                    <input
-                        placeholder='signature (optional)'
-                        className="input-base flex-1 text-sm rounded-r-none min-w-0"
-                        value={signature}
-                        onChange={handleSignatureChange}
-                    />
-                    <RefreshCcw className="input-base cursor-pointer active:opacity-80 select-none -ml-3 rounded-l-none flex-shrink-0" size={40} onClick={generateRandomSignature} />
-                </div>
+                <input
+                    placeholder='password (optional)'
+                    className="input-base flex-1 text-sm"
+                    value={password}
+                    onChange={handlePasswordChange}
+                />
+                <RefreshCcw className="input-base cursor-pointer active:opacity-80 select-none -ml-3 rounded-l-none" size={40} onClick={generateRandomSignature} />
                 <div className="flex flex-row justify-end">
-                    <div className="input-base flex flex-row self-end w-full sm:w-fit items-center justify-center gap-[1ch] bg-accentDim border-accent cursor-pointer" onClick={() => onPaste({ author, expiry, signature })}>
+                    <div className="input-base flex flex-row self-end w-full sm:w-fit items-center justify-center gap-[1ch] bg-accentDim border-accent cursor-pointer" onClick={() => onPaste({ author, expiry, password })}>
                         <h3 className="text-accent">paste!</h3>
                         <ClipboardPaste className="" color="var(--color-accent)" size={16} />
                     </div>

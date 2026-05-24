@@ -2,7 +2,8 @@ export type ExpiryOption = 'none' | '1_hour' | '6_hour' | '12_hour' | '1_day' | 
 
 export interface PasteFile {
     fileName: string,
-    content: string
+    content: string,
+    algo?: string
 }
 
 export interface Paste {

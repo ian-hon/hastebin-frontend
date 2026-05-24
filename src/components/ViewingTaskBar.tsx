@@ -1,19 +1,17 @@
 import { ChevronDown, CircleQuestionMark, Copy, FileDiff, GitFork, Plus, type LucideProps } from 'lucide-react';
 import CustomQRCode from './CustomQRCode';
-import type { ChecksumPair, Paste } from '../types';
+import type { Paste } from '../types';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { bufferToHex, createHash, getTimeRemaining, toHex } from '../lib/utils/format';
+import { getTimeRemaining, toHex } from '../lib/utils/format';
 
 export interface ViewingTaskBarProps {
     paste: Paste,
-    checksumPair: ChecksumPair | undefined,
     onDiffToggle: () => void;
 }
 
 const ViewingTaskBar = ({
     paste,
-    checksumPair,
     onDiffToggle,
     ...props
 }: ViewingTaskBarProps) => {
@@ -22,25 +20,6 @@ const ViewingTaskBar = ({
     const [isOpened, setOpened] = useState(true);
     const contentRef = useRef<HTMLDivElement>(null);
     const [contentHeight, setContentHeight] = useState(0);
-
-    // #region signature
-    const [verifySignature, setVerifySignature] = useState<string>('');
-    const handleVerifySignatureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setVerifySignature(e.target.value);
-    };
-
-    const [isVerified, setIsVerified] = useState(false);
-
-    useEffect(() => {
-        if (!checksumPair || !verifySignature) return;
-
-        createHash(verifySignature).then((buf) => {
-            return createHash(`${checksumPair[0]}${bufferToHex(buf)}`);
-        }).then((buf) => {
-            setIsVerified(bufferToHex(buf) === checksumPair[1]);
-        });
-    }, [verifySignature, checksumPair]);
-    // #endregion
 
     useEffect(() => {
         if (contentRef.current) {
@@ -134,17 +113,6 @@ const ViewingTaskBar = ({
                             </div>
                         }
                     </div>
-                    {
-                        checksumPair && <div className="flex flex-row gap-[1ch] items-center mt-4">
-                            <input
-                                placeholder="verify signature"
-                                className={`text-text text-sm p-2 py-1 bg-dimBackground rounded-md border-2 flex-1 min-w-0 ${verifySignature ? (isVerified ? 'border-green-500' : 'border-red-500') : 'border-border'}`}
-                                value={verifySignature}
-                                onChange={handleVerifySignatureChange}
-                            />
-                            <CircleQuestionMark onClick={() => { navigate('/guide') }} color="var(--color-text)" className="opacity-50 transform-gpu duration-300 hover:opacity-100 active:opacity-100 cursor-pointer flex-shrink-0" />
-                        </div>
-                    }
                 </div>
                 <div className="flex flex-col items-center shrink-0">
                     <CustomQRCode value={pasteUrl} size={128} bgColor='transparent' fgColor='var(--color-text)' gap={1} borderRadius={1} />

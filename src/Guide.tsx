@@ -41,14 +41,14 @@ const Guide = () => {
             mediaURL: "forking_diffing.mov.gif"
         },
         {
-            title: "signing your pastes",
+            title: "encrypting your pastes",
             steps: [
-                "during paste creation, enter your signature",
-                "enter a signature",
-                "or, click the 'generate' button",
-                "verify a paste belongs to you by sharing the signature",
+                "during paste creation, enter a password",
+                "the paste will be encrypted using AES-GCM with PBKDF2",
+                "share the password separately with your recipient",
+                "when viewing, enter the password to decrypt",
             ],
-            mediaURL: "signing.mov.gif"
+            note: "encryption is done client-side; the server never sees your password"
         },
         {
             title: "commenting",
