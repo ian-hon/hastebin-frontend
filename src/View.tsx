@@ -3,7 +3,7 @@ import FileBrowser from './components/FileBrowser';
 import { useEffect, useState, useMemo, useRef, memo, useCallback } from 'react';
 import type { Comment, Paste, PasteFile } from './types';
 import ViewingTaskBar from './components/ViewingTaskBar';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { pasteApi } from './api/services/paste.service';
 import { fromHex } from './lib/utils/format';
 import { detectLanguage } from './lib/language';
@@ -164,6 +164,7 @@ const CommentForm = memo(({
 function View() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
+    const [searchParams] = useSearchParams();
     const [paste, setPaste] = useState<Paste | undefined>();
     const [content, setContent] = useState("fetching paste, wait a moment...");
     const [activeFile, setActiveFile] = useState(0);
@@ -230,7 +231,7 @@ function View() {
     // call api
     useEffect(() => {
         if (!id) return;
-        pasteApi.fetchPaste(fromHex(id)).then(paste => {
+        pasteApi.fetchPaste(fromHex(id)).then(async paste => {
             setPaste(paste.paste);
             let parsedFiles: PasteFile[];
             try {
@@ -239,12 +240,44 @@ function View() {
                 parsedFiles = [{ fileName: 'main', content: paste.paste.content }];
             }
 
-            // show modal if files are encrypted
+            // check if encrypted
             const hasEncryption = parsedFiles.some(file => file.algo);
             if (hasEncryption) {
                 setEncryptedFiles(parsedFiles);
-                setShowPasswordPrompt(true);
-                setContent('paste is encrypted. enter password to decrypt.');
+
+                // then check if password is given
+                const urlPassword = searchParams.get('password');
+                if (urlPassword) {
+                    // console.log(urlPassword);
+                    // console.log(decodeURIComponent(urlPassword));
+                    try {
+                        const decryptedFiles = await Promise.all(
+                            parsedFiles.map(async (file) => {
+                                if (file.algo) {
+                                    const decryptedContent = await decrypt(file.content, urlPassword);
+                                    return { fileName: file.fileName, content: decryptedContent };
+                                }
+                                return file;
+                            })
+                        );
+
+                        setFiles(decryptedFiles);
+                        setContent(decryptedFiles[0]?.content ?? '');
+
+                        // then load comments
+                        if (paste.paste.id) {
+                            commentApi.fetchCommentsByPaste(paste.paste.id).then(setComments);
+                        }
+                    } catch {
+                        setShowPasswordPrompt(true);
+                        setDecryptionError('auto-decryption failed - invalid password in URL');
+                        setContent('paste is encrypted. enter password to decrypt.');
+                    }
+                } else {
+                    // no password, so just show the regular modal
+                    setShowPasswordPrompt(true);
+                    setContent('paste is encrypted. enter password to decrypt.');
+                }
             } else {
                 // continue normally
                 setFiles(parsedFiles);
@@ -276,7 +309,7 @@ function View() {
             console.log(e);
             navigate(`/`);
         });
-    }, [id, navigate])
+    }, [id, navigate, searchParams])
 
     const handleTextSelection = () => {
         setTimeout(() => {
@@ -525,10 +558,7 @@ function View() {
         {showPasswordPrompt && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
                 <div className="bg-primary rounded-lg drop-shadow-red border-2 border-border p-6 max-w-md w-full">
-                    <h2 className="text-text text-xl font-bold mb-4">encrypted paste</h2>
-                    <p className="text-textDim text-sm mb-4">
-                        This paste is encrypted. Enter the password to decrypt and view the content.
-                    </p>
+                    <h2 className="text-text text-xl font-bold mb-8">encrypted paste</h2>
                     <input
                         type="password"
                         value={password}
@@ -548,14 +578,14 @@ function View() {
                     <div className="flex gap-2 justify-end">
                         <button
                             onClick={() => navigate('/')}
-                            className="px-4 py-2 text-sm bg-dimBackground border-2 border-border text-text rounded duration-300 opacity-50 hover:opacity-100 active:opacity-100 transition-opacity"
+                            className="cursor-pointer px-4 py-2 text-sm bg-dimBackground border-2 border-border text-text rounded duration-300 opacity-50 hover:opacity-100 active:opacity-100 transition-opacity"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={handleDecrypt}
                             disabled={isDecrypting || !password}
-                            className="px-4 py-2 text-sm bg-accentDim border-2 border-accent text-accent rounded duration-300 hover:opacity-80 active:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
+                            className="cursor-pointer px-4 py-2 text-sm bg-accentDim border-2 border-accent text-accent rounded duration-300 hover:opacity-80 active:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed transition-opacity"
                         >
                             {isDecrypting ? 'Decrypting...' : 'Decrypt'}
                         </button>
