@@ -7,6 +7,7 @@ import { useSearchParams, useNavigate } from 'react-router';
 import { pasteApi } from './api/services/paste.service';
 import { fromHex, toHex } from './lib/utils/format';
 import { ALGO_NAME, encrypt } from './lib/utils/crypto';
+import { parsePasteFiles } from './lib/utils/parseFiles';
 
 const EXPIRY_SECONDS: Record<ExpiryOption, number | undefined> = {
   none: undefined,
@@ -53,12 +54,7 @@ function App() {
     if (!sourceId) return;
 
     pasteApi.fetchPaste(fromHex(sourceId)).then(paste => {
-      let parsedFiles: PasteFile[];
-      try {
-        parsedFiles = JSON.parse(paste.paste.content) as PasteFile[];
-      } catch {
-        parsedFiles = [{ fileName: 'main', content: paste.paste.content }];
-      }
+      const parsedFiles = parsePasteFiles(paste.paste.content);
       setFiles(parsedFiles);
       setContent(parsedFiles[0]?.content ?? '');
       if (forkId) setForkedFrom(paste.paste.id);
