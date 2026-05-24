@@ -232,6 +232,7 @@ function View() {
     useEffect(() => {
         if (!id) return;
         pasteApi.fetchPaste(fromHex(id)).then(async paste => {
+            console.log(paste);
             setPaste(paste.paste);
             let parsedFiles: PasteFile[];
             try {

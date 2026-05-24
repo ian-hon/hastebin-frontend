@@ -74,7 +74,8 @@ function App() {
 
     // if password is non-null, encrypt the paste contents
     // else just continue
-    let filesToSend = { ...updatedFiles };
+    // let filesToSend = { ...updatedFiles };
+    let filesToSend = updatedFiles;
     if (options.password) {
       filesToSend = await Promise.all(
         updatedFiles.map(async (file) => ({
