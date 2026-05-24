@@ -44,11 +44,11 @@ const Guide = () => {
             title: "encrypting your pastes",
             steps: [
                 "during paste creation, enter a password",
-                "the paste will be encrypted using AES-GCM with PBKDF2",
-                "share the password separately with your recipient",
+                "share the password separately",
                 "when viewing, enter the password to decrypt",
             ],
-            note: "encryption is done client-side; the server never sees your password"
+            note: "encryption is done client-side; the server never sees your password",
+            mediaURL: "encryption.mov.gif"
         },
         {
             title: "commenting",
